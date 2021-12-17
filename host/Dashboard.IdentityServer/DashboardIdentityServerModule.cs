@@ -1,7 +1,10 @@
 using System;
 using System.Linq;
+using Dashboard.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
@@ -92,6 +95,12 @@ namespace Dashboard
             var hostingEnvironment = context.Services.GetHostingEnvironment();
             var configuration = context.Services.GetConfiguration();
 
+            context.Services.AddDbContext<IdentityServerHostMigrationsDbContext>(options =>
+            {
+                options.UseMySql(configuration.GetConnectionString("Default"),
+                    ServerVersion.AutoDetect(configuration.GetConnectionString("Default")));
+            });
+            
             Configure<AbpDbContextOptions>(options =>
             {
                 options.UseMySQL();
@@ -189,15 +198,18 @@ namespace Dashboard
             app.UseAuditing();
             app.UseAbpSerilogEnrichers();
             app.UseConfiguredEndpoints();
-
-            SeedData(context);
         }
 
-        private void SeedData(ApplicationInitializationContext context)
+        public override void OnPostApplicationInitialization(ApplicationInitializationContext context)
         {
             AsyncHelper.RunSync(async () =>
             {
-                using (var scope = context.ServiceProvider.CreateScope())
+                using var scope = context.ServiceProvider.CreateScope();
+                var isExisted = await scope.ServiceProvider
+                    .GetRequiredService<IdentityServerHostMigrationsDbContext>()
+                    .Database
+                    .EnsureCreatedAsync();
+                if (isExisted)
                 {
                     await scope.ServiceProvider
                         .GetRequiredService<IDataSeeder>()

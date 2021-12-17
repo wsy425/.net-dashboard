@@ -31,7 +31,6 @@
     <ProjectReference Include="..\..\src\Dashboard.HttpApi\Dashboard.HttpApi.csproj" />
     <ProjectReference Include="..\..\src\Dashboard.Application\Dashboard.Application.csproj" />
     <ProjectReference Include="..\..\src\Dashboard.EntityFrameworkCore\Dashboard.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\Dashboard.Host.Shared\Dashboard.Host.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

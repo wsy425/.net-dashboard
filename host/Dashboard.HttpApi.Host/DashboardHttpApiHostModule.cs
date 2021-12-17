@@ -52,7 +52,6 @@ namespace Dashboard
             {
                 options.UseMySQL();
             });
-            
 
             if (hostingEnvironment.IsDevelopment())
             {

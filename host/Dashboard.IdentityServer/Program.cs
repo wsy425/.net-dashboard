@@ -20,7 +20,6 @@ namespace Dashboard
 #endif
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .Enrich.FromLogContext()
-                .WriteTo.Async(c => c.File("Logs/logs.txt"))
 #if DEBUG
                 .WriteTo.Async(c => c.Console())
 #endif
@@ -45,10 +44,6 @@ namespace Dashboard
 
         internal static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration(build =>
-                {
-                    build.AddJsonFile("appsettings.secrets.json", optional: true);
-                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
