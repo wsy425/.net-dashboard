@@ -1,6 +1,8 @@
 ﻿using System;
+using Dashboard.BLOBEntity;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 
 namespace Dashboard.EntityFrameworkCore
 {
@@ -38,6 +40,10 @@ namespace Dashboard.EntityFrameworkCore
                 b.HasIndex(q => q.CreationTime);
             });
             */
+            builder.Entity<Blob>(b =>
+            {
+                b.ToTable(options.TablePrefix + "Blob", options.Schema);
+            });
         }
     }
 }

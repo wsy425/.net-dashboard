@@ -24,6 +24,8 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.VirtualFileSystem;
+using Volo.Abp.BlobStoring;
+using Volo.Abp.BlobStoring.FileSystem;
 
 namespace Dashboard
 {
@@ -38,7 +40,9 @@ namespace Dashboard
         typeof(AbpPermissionManagementEntityFrameworkCoreModule),
         typeof(AbpSettingManagementEntityFrameworkCoreModule),
         typeof(AbpAspNetCoreSerilogModule),
-        typeof(AbpSwashbuckleModule)
+        typeof(AbpSwashbuckleModule),
+        typeof(AbpBlobStoringModule),
+        typeof(AbpBlobStoringFileSystemModule)
         )]
     public class DashboardHttpApiHostModule : AbpModule
     {
@@ -51,6 +55,17 @@ namespace Dashboard
             Configure<AbpDbContextOptions>(options =>
             {
                 options.UseMySQL();
+            });
+            
+            Configure<AbpBlobStoringOptions>(options =>
+            {
+                options.Containers.ConfigureDefault(container =>
+                {
+                    container.UseFileSystem(fileSystem =>
+                    {
+                        fileSystem.BasePath = configuration["Blobs:Picture"];
+                    });
+                });
             });
 
             if (hostingEnvironment.IsDevelopment())

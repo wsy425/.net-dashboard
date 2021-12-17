@@ -1,4 +1,6 @@
-﻿using Volo.Abp.Data;
+﻿using Dashboard.BLOBEntity;
+using Microsoft.EntityFrameworkCore;
+using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 
 namespace Dashboard.EntityFrameworkCore
@@ -9,5 +11,6 @@ namespace Dashboard.EntityFrameworkCore
         /* Add DbSet for each Aggregate Root here. Example:
          * DbSet<Question> Questions { get; }
          */
+        DbSet<Blob> Blobs { get; }
     }
 }
