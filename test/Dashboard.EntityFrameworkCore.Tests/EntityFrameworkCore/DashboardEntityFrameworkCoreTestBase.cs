@@ -1,8 +1,9 @@
-﻿using Volo.Abp;
-
-namespace Dashboard.EntityFrameworkCore
+﻿namespace Dashboard.EntityFrameworkCore
 {
-    public abstract class DashboardEntityFrameworkCoreTestBase : DashboardTestBase<DashboardEntityFrameworkCoreTestModule> 
+    /* This class can be used as a base class for EF Core integration tests,
+     * while SampleRepository_Tests uses a different approach.
+     */
+    public abstract class DashboardEntityFrameworkCoreTestBase : DashboardTestBase<DashboardEntityFrameworkCoreTestModule>
     {
 
     }

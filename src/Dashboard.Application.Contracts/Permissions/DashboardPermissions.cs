@@ -1,10 +1,14 @@
-﻿namespace Dashboard.Permissions
+﻿using Volo.Abp.Reflection;
+
+namespace Dashboard.Permissions
 {
-    public static class DashboardPermissions
+    public class DashboardPermissions
     {
         public const string GroupName = "Dashboard";
 
-        //Add your own permission names. Example:
-        //public const string MyPermission1 = GroupName + ".MyPermission1";
+        public static string[] GetAll()
+        {
+            return ReflectionHelper.GetPublicConstantsRecursively(typeof(DashboardPermissions));
+        }
     }
 }

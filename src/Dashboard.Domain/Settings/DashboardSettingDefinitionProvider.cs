@@ -6,8 +6,9 @@ namespace Dashboard.Settings
     {
         public override void Define(ISettingDefinitionContext context)
         {
-            //Define your own settings here. Example:
-            //context.Add(new SettingDefinition(DashboardSettings.MySetting1));
+            /* Define module settings here.
+             * Use names from DashboardSettings class.
+             */
         }
     }
 }

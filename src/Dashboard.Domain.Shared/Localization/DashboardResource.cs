@@ -5,6 +5,6 @@ namespace Dashboard.Localization
     [LocalizationResourceName("Dashboard")]
     public class DashboardResource
     {
-
+        
     }
 }

@@ -1,31 +1,24 @@
-﻿using Volo.Abp.Account;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.AutoMapper;
-using Volo.Abp.FeatureManagement;
-using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
-using Volo.Abp.PermissionManagement;
-using Volo.Abp.SettingManagement;
-using Volo.Abp.TenantManagement;
+using Volo.Abp.Application;
 
 namespace Dashboard
 {
     [DependsOn(
         typeof(DashboardDomainModule),
-        typeof(AbpAccountApplicationModule),
         typeof(DashboardApplicationContractsModule),
-        typeof(AbpIdentityApplicationModule),
-        typeof(AbpPermissionManagementApplicationModule),
-        typeof(AbpTenantManagementApplicationModule),
-        typeof(AbpFeatureManagementApplicationModule),
-        typeof(AbpSettingManagementApplicationModule)
+        typeof(AbpDddApplicationModule),
+        typeof(AbpAutoMapperModule)
         )]
     public class DashboardApplicationModule : AbpModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
+            context.Services.AddAutoMapperObjectMapper<DashboardApplicationModule>();
             Configure<AbpAutoMapperOptions>(options =>
             {
-                options.AddMaps<DashboardApplicationModule>();
+                options.AddMaps<DashboardApplicationModule>(validate: true);
             });
         }
     }

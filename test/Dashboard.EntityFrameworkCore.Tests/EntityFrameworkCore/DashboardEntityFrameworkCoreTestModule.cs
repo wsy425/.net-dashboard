@@ -2,8 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.DependencyInjection;
-using Volo.Abp;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.Sqlite;
 using Volo.Abp.Modularity;
@@ -11,51 +9,34 @@ using Volo.Abp.Modularity;
 namespace Dashboard.EntityFrameworkCore
 {
     [DependsOn(
-        typeof(DashboardEntityFrameworkCoreModule),
         typeof(DashboardTestBaseModule),
+        typeof(DashboardEntityFrameworkCoreModule),
         typeof(AbpEntityFrameworkCoreSqliteModule)
         )]
     public class DashboardEntityFrameworkCoreTestModule : AbpModule
     {
-        private SqliteConnection _sqliteConnection;
-
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            ConfigureInMemorySqlite(context.Services);
-        }
+            var sqliteConnection = CreateDatabaseAndGetConnection();
 
-        private void ConfigureInMemorySqlite(IServiceCollection services)
-        {
-            _sqliteConnection = CreateDatabaseAndGetConnection();
-
-            services.Configure<AbpDbContextOptions>(options =>
+            Configure<AbpDbContextOptions>(options =>
             {
-                options.Configure(context =>
+                options.Configure(abpDbContextConfigurationContext =>
                 {
-                    context.DbContextOptions.UseSqlite(_sqliteConnection);
+                    abpDbContextConfigurationContext.DbContextOptions.UseSqlite(sqliteConnection);
                 });
             });
         }
-
-        public override void OnApplicationShutdown(ApplicationShutdownContext context)
-        {
-            _sqliteConnection.Dispose();
-        }
-
+        
         private static SqliteConnection CreateDatabaseAndGetConnection()
         {
             var connection = new SqliteConnection("Data Source=:memory:");
             connection.Open();
 
-            var options = new DbContextOptionsBuilder<DashboardDbContext>()
-                .UseSqlite(connection)
-                .Options;
-
-            using (var context = new DashboardDbContext(options))
-            {
-                context.GetService<IRelationalDatabaseCreator>().CreateTables();
-            }
-
+            new DashboardDbContext(
+                new DbContextOptionsBuilder<DashboardDbContext>().UseSqlite(connection).Options
+            ).GetService<IRelationalDatabaseCreator>().CreateTables();
+            
             return connection;
         }
     }

@@ -8,13 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="5.0.*" />
     <ProjectReference Include="..\..\src\Dashboard.EntityFrameworkCore\Dashboard.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Dashboard.TestBase\Dashboard.TestBase.csproj" />
     <PackageReference Include="Volo.Abp.EntityFrameworkCore.Sqlite" Version="4.4.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
   </ItemGroup>
 
 </Project>

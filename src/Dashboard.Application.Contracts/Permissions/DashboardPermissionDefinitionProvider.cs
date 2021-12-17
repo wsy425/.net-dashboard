@@ -8,9 +8,7 @@ namespace Dashboard.Permissions
     {
         public override void Define(IPermissionDefinitionContext context)
         {
-            var myGroup = context.AddGroup(DashboardPermissions.GroupName);
-            //Define your own permissions here. Example:
-            //myGroup.AddPermission(DashboardPermissions.MyPermission1, L("Permission:MyPermission1"));
+            var myGroup = context.AddGroup(DashboardPermissions.GroupName, L("Permission:Dashboard"));
         }
 
         private static LocalizableString L(string name)

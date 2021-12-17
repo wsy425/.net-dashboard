@@ -1,8 +1,6 @@
 {
   "culture": "sk",
   "texts": {
-    "Menu:Home": "Domov",
-    "Welcome": "Vitajte",
-    "LongWelcomeMessage": "Vitajte v aplikácii. Toto je štartovací projekt založený na ABP frameworku. Viac informácií nájdete na stránke abp.io."
+    "SamplePageMessage": "Ukážka stránky pre modul Dashboard"
   }
 }

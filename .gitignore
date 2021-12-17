@@ -252,11 +252,8 @@ paket-files/
 *.sln.iml
 
 # Dashboard
-src/Dashboard.Web/Logs/*
-src/Dashboard.Web.Host/Logs/*
-src/Dashboard.IdentityServer/Logs/*
-src/Dashboard.HttpApi.Host/Logs/*
-src/Dashboard.HttpApi.Host/Logs/*
-src/Dashboard.DbMigrator/Logs/*
-src/Dashboard.Blazor.Server/Logs/*
-src/Dashboard.Blazor.Server.Tiered/Logs/*
+host/Dashboard.IdentityServer/Logs/logs.txt
+host/Dashboard.HttpApi.Host/Logs/logs.txt
+host/Dashboard.Web.Host/Logs/logs.txt
+host/Dashboard.Web.Unified/Logs/logs.txt
+host/Dashboard.Blazor.Server.Host/Logs/logs.txt

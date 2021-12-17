@@ -1,41 +1,32 @@
 ﻿using Localization.Resources.AbpUi;
 using Dashboard.Localization;
-using Volo.Abp.Account;
-using Volo.Abp.FeatureManagement;
-using Volo.Abp.Identity;
+using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
-using Volo.Abp.PermissionManagement.HttpApi;
-using Volo.Abp.SettingManagement;
-using Volo.Abp.TenantManagement;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Dashboard
 {
     [DependsOn(
         typeof(DashboardApplicationContractsModule),
-        typeof(AbpAccountHttpApiModule),
-        typeof(AbpIdentityHttpApiModule),
-        typeof(AbpPermissionManagementHttpApiModule),
-        typeof(AbpTenantManagementHttpApiModule),
-        typeof(AbpFeatureManagementHttpApiModule),
-        typeof(AbpSettingManagementHttpApiModule)
-        )]
+        typeof(AbpAspNetCoreMvcModule))]
     public class DashboardHttpApiModule : AbpModule
     {
-        public override void ConfigureServices(ServiceConfigurationContext context)
+        public override void PreConfigureServices(ServiceConfigurationContext context)
         {
-            ConfigureLocalization();
+            PreConfigure<IMvcBuilder>(mvcBuilder =>
+            {
+                mvcBuilder.AddApplicationPartIfNotExists(typeof(DashboardHttpApiModule).Assembly);
+            });
         }
 
-        private void ConfigureLocalization()
+        public override void ConfigureServices(ServiceConfigurationContext context)
         {
             Configure<AbpLocalizationOptions>(options =>
             {
                 options.Resources
                     .Get<DashboardResource>()
-                    .AddBaseTypes(
-                        typeof(AbpUiResource)
-                    );
+                    .AddBaseTypes(typeof(AbpUiResource));
             });
         }
     }

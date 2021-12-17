@@ -2,9 +2,10 @@
 {
     public static class DashboardSettings
     {
-        private const string Prefix = "Dashboard";
+        public const string GroupName = "Dashboard";
 
-        //Add your own setting names here. Example:
-        //public const string MySetting1 = Prefix + ".MySetting1";
+        /* Add constants for setting names. Example:
+         * public const string MySettingName = GroupName + ".MySettingName";
+         */
     }
 }

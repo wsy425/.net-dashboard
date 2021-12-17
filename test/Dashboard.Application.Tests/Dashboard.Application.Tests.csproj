@@ -10,9 +10,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Dashboard.Application\Dashboard.Application.csproj" />
     <ProjectReference Include="..\Dashboard.Domain.Tests\Dashboard.Domain.Tests.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
   </ItemGroup>
 
