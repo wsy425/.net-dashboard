@@ -13,9 +13,10 @@ using Volo.Abp.Application.Services;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Guids;
+using Volo.Abp.Uow;
 using Volo.Abp.Validation;
 
-namespace Dashboard.BLOBService
+namespace Dashboard.BLOBServices
 {
     [RemoteService(false)]
     public class BlobService : ApplicationService, IBlobService
@@ -28,11 +29,13 @@ namespace Dashboard.BLOBService
         public BlobService(
             IConfiguration configuration, 
             IGuidGenerator guidGenerator, 
-            IBlobContainer<ProfilePictureContainer> blobContainer)
+            IBlobContainer<ProfilePictureContainer> blobContainer, 
+            IRepository<Blob, Guid> repository)
         {
             _configuration = configuration;
             _guidGenerator = guidGenerator;
             _blobContainer = blobContainer;
+            _repository = repository;
         }
 
         public async Task<BlobUploadResultDto> CreateAsync(BlobUploadInputDto input)
@@ -48,15 +51,16 @@ namespace Dashboard.BLOBService
                     $"File exceeds the maximum upload size {BlobFileConstant.MaxFileSizeAsMegabytes} MB !");
             }
 
-            var uniqueFileName = DateTime.Now.ToString("yyyyMMddHHmmss")
+            var uniqueFileName = DateTime.Now.ToString("yyyyMMddHHmmss") 
+                                 + "_"
                                  + Path.GetFileNameWithoutExtension(input.Name)
                                  + Path.GetExtension(input.Name);
 
-            var fileUrl = "api/blobs/files/web/" + uniqueFileName;
+            var fileUrl = "api/dashboard/blob/files/web/" + uniqueFileName;
 
             await _blobContainer.SaveAsync(uniqueFileName,input.Bytes);
 
-            await _repository.InsertAsync(new Blob
+            await _repository.InsertAsync(new Blob(_guidGenerator.Create())
                 {
                     Name = uniqueFileName,
                     WebUrl = fileUrl
@@ -79,6 +83,7 @@ namespace Dashboard.BLOBService
             };
         }
 
+        [UnitOfWork]
         public async Task<BlogDeleteDto> DeleteAsync(string name)
         {
             var isOk = await _blobContainer.DeleteAsync(name);
@@ -89,13 +94,21 @@ namespace Dashboard.BLOBService
                 IsDeleteOk = isOk
             };
         }
-
-        public List<string> GetListAsync()
+        /**
+         * 传入name则根据包含name名返回列表
+         * 不传入列表名则默认返回所有文件名
+         */
+        public List<string> GetListAsync(string name)
         {
             var filePath = _configuration["Blobs:Picture"] + "/host";
             var directoryInfo = new DirectoryInfo(filePath);
-
-            return directoryInfo.GetFiles().Select(file => file.Name).ToList();
+            var files = directoryInfo.GetFiles();
+            if (!string.IsNullOrEmpty(name))
+            {
+               return files.Select(file => file.Name)
+                   .Where(file => file.Contains(name)).ToList();
+            }
+            return files.Select(file => file.Name).ToList();
         }
     }
 }

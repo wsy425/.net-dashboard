@@ -13,6 +13,6 @@ namespace Dashboard.BLOB
 
         Task<BlogDeleteDto> DeleteAsync(string name);
 
-        List<string> GetListAsync();
+        List<string> GetListAsync(string name);
     }
 }

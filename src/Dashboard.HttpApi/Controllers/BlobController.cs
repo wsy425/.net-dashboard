@@ -35,15 +35,28 @@ namespace Dashboard.Controllers
         }
 
         [HttpGet]
+        [Route("web/{name}")]
         public async Task<FileResult> GetAsync(string name)
         {
             var file = await _blobsAppService.GetAsync(name);
             var extension = Path.GetExtension(name).RemovePreFix(".").ToLowerInvariant();
-            string type = extension.Equals("pdf") ? MimeTypes.Application.Pdf : MimeTypes.GetByExtension(Path.GetExtension(name));
+            return File(
+                file.Bytes, 
+                MimeTypes.GetByExtension(extension)
+            );
+        }
+
+        [HttpGet]
+        [Route("download/{name}")]
+        public async Task<FileResult> DownloadAsync(string name)
+        {
+            var file = await _blobsAppService.GetAsync(name);
+            var extension = Path.GetExtension(name).RemovePreFix(".").ToLowerInvariant();
+            var type = GetFileExtensionType(extension);
             return File(
                 file.Bytes, 
                 type,
-                name.Substring(14)
+                name.Split("_")[1]
             );
         }
 
@@ -53,21 +66,57 @@ namespace Dashboard.Controllers
             return await _blobsAppService.DeleteAsync(name);
         }
 
-        public List<string> GetListAsync()
+        [HttpGet]
+        public List<string> GetListAsync(string name)
         {
-            return _blobsAppService.GetListAsync();
+            return _blobsAppService.GetListAsync(name);
         }
         
-        [HttpGet]
-        [Route("json/{name}")]
-        public async Task<FileResult> GetJsonAsync(string name)
+        // [HttpGet]
+        // [Route("json/{name}")]
+        // public async Task<FileResult> GetJsonAsync(string name)
+        // {
+        //     var file = await _blobsAppService.GetAsync(name);
+        //     return File(
+        //         file.Bytes,
+        //         MimeTypes.Application.Json,
+        //         name.Substring(14)
+        //     );
+        // }
+
+        /**
+         * 获取常用文件后缀
+         */
+        private string GetFileExtensionType(string extension)
         {
-            var file = await _blobsAppService.GetAsync(name);
-            return File(
-                file.Bytes,
-                MimeTypes.Application.Json,
-                name.Substring(14)
-            );
+            switch (extension)
+            {
+                case "png":
+                    return MimeTypes.Image.Png;
+                case "jpg":
+                case "jpeg":
+                    return MimeTypes.Image.Jpeg;
+                case "gif":
+                    return MimeTypes.Image.Gif;
+                case "pdf":
+                    return MimeTypes.Application.Pdf;
+                case "javascript":
+                    return MimeTypes.Application.Javascript;
+                case "xml":
+                    return MimeTypes.Application.Xml;
+                case "zip":
+                    return MimeTypes.Application.Zip;
+                case "mp4":
+                    return MimeTypes.Video.Mp4;
+                case "css":
+                    return MimeTypes.Text.Css;
+                case "csv":
+                    return MimeTypes.Text.Csv;
+                case "html":
+                    return MimeTypes.Text.Html;
+            }
+
+            return MimeTypes.Application.OctetStream;
         }
     }
 }

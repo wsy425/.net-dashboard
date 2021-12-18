@@ -39,8 +39,6 @@ using Volo.Abp.PermissionManagement.Identity;
 using Volo.Abp.SettingManagement;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.Swashbuckle;
-using Volo.Abp.TenantManagement;
-using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.Threading;
 using Volo.Abp.UI.Navigation.Urls;
 
@@ -69,9 +67,6 @@ namespace Dashboard
         typeof(AbpFeatureManagementEntityFrameworkCoreModule),
         typeof(AbpFeatureManagementApplicationModule),
         typeof(AbpFeatureManagementHttpApiModule),
-        typeof(AbpTenantManagementEntityFrameworkCoreModule),
-        typeof(AbpTenantManagementApplicationModule),
-        typeof(AbpTenantManagementHttpApiModule),
         typeof(AbpAspNetCoreAuthenticationJwtBearerModule),
         typeof(DashboardApplicationContractsModule),
         typeof(AbpAspNetCoreSerilogModule),

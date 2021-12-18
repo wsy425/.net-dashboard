@@ -26,6 +26,7 @@ using Volo.Abp.Swashbuckle;
 using Volo.Abp.VirtualFileSystem;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.BlobStoring.FileSystem;
+using Volo.Abp.Threading;
 
 namespace Dashboard
 {
@@ -33,7 +34,6 @@ namespace Dashboard
         typeof(DashboardApplicationModule),
         typeof(DashboardEntityFrameworkCoreModule),
         typeof(DashboardHttpApiModule),
-        typeof(AbpAspNetCoreMvcUiMultiTenancyModule),
         typeof(AbpAutofacModule),
         typeof(AbpEntityFrameworkCoreMySQLModule),
         typeof(AbpAuditLoggingEntityFrameworkCoreModule),
@@ -46,7 +46,6 @@ namespace Dashboard
         )]
     public class DashboardHttpApiHostModule : AbpModule
     {
-
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             var hostingEnvironment = context.Services.GetHostingEnvironment();
@@ -64,6 +63,7 @@ namespace Dashboard
                     container.UseFileSystem(fileSystem =>
                     {
                         fileSystem.BasePath = configuration["Blobs:Picture"];
+                        fileSystem.AppendContainerNameToBasePath = false;
                     });
                 });
             });
@@ -167,6 +167,18 @@ namespace Dashboard
             app.UseAuditing();
             app.UseAbpSerilogEnrichers();
             app.UseConfiguredEndpoints();
+        }
+        
+        public override void OnPostApplicationInitialization(ApplicationInitializationContext context)
+        {
+            AsyncHelper.RunSync(async () =>
+            {
+                using var scope = context.ServiceProvider.CreateScope();
+                await scope.ServiceProvider
+                    .GetRequiredService<DashboardDbContext>()
+                    .Database
+                    .EnsureCreatedAsync();
+            });
         }
     }
 }

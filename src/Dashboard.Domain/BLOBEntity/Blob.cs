@@ -7,5 +7,16 @@ namespace Dashboard.BLOBEntity
     {
         public string Name { get; set; }
         public string WebUrl { get; set; }
+
+        public Blob(Guid id)
+            : base(id)
+        {
+            
+        }
+
+        public Blob()
+        {
+            
+        }
     }
 }
