@@ -2,6 +2,14 @@
   "culture": "en",
   "texts": {
     "MyAccount":  "My account",
-    "SamplePageMessage": "A sample page for the Dashboard module"
+    "SamplePageMessage": "A sample page for the Dashboard module",
+    "User:Existed": "User already exists",
+    "User:CreateFailed": "User created failed, the reasons are {0}",
+    "User:CreateSuccess": "User created successfully",
+    "User:UserNameInvalid": "The {0} User does not exist",
+    "User:UserEmailInvalid": "The user to which the {0} belongs does not exist",
+    "User:UserNameNotMatchEmail": "{0} and {1} do not match",
+    "User:ResetPasswordSuccess": "Password reset successfully",
+    "User:ResetPasswordFail": "Password reset failed, the reasons are {0}"
   }
 }

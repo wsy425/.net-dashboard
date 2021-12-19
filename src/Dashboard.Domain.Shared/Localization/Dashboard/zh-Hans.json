@@ -2,6 +2,14 @@
   "culture": "zh-Hans",
   "texts": {
     "MyAccount": "我的账户",
-    "SamplePageMessage": "Dashboard模块的示例页面"
+    "SamplePageMessage": "Dashboard模块的示例页面",
+    "User:Existed": "用户已存在",
+    "User:CreateFailed": "用户创建失败,原因是{0}",
+    "User:CreateSuccess": "用户创建成功",
+    "User:UserNameInvalid": "{0}用户不存在",
+    "User:UserEmailInvalid": "{0}所属用户不存在",
+    "User:UserNameNotMatchEmail": "{0}和{1}不匹配",
+    "User:ResetPasswordSuccess": "重置密码成功",
+    "User:ResetPasswordFail": "重置密码失败,原因是{0}"
   }
 }

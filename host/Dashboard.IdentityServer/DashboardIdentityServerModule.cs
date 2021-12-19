@@ -77,7 +77,7 @@ namespace Dashboard
         public override void PreConfigureServices(ServiceConfigurationContext context)
         {
             // 部署到Centos服务器上时因为不存在/libs/abp/core/abp.css  /libs/abp/utils/abp-utils.umd.min.js报错
-            context.Services.Configure<AbpBundlingOptions>(options =>
+            context.Services.PreConfigure<AbpBundlingOptions>(options =>
             {
                 options.Mode = BundlingMode.None;
                 options.MinificationIgnoredFiles.Add("/libs/abp/core/abp.css");

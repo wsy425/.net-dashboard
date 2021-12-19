@@ -181,24 +181,6 @@ namespace Dashboard.IdentityServer
                 );
             }
 
-            // Blazor Client
-            var blazorClientId = configurationSection["Dashboard_Blazor:ClientId"];
-            if (!blazorClientId.IsNullOrWhiteSpace())
-            {
-                var blazorRootUrl = configurationSection["Dashboard_Blazor:RootUrl"].TrimEnd('/');
-
-                await CreateClientAsync(
-                    name: blazorClientId,
-                    scopes: commonScopes,
-                    grantTypes: new[] { "authorization_code" },
-                    secret: configurationSection["Dashboard_Blazor:ClientSecret"]?.Sha256(),
-                    requireClientSecret: false,
-                    redirectUri: $"{blazorRootUrl}/authentication/login-callback",
-                    postLogoutRedirectUri: $"{blazorRootUrl}/authentication/logout-callback",
-                    corsOrigins: new[] { blazorRootUrl.RemovePostFix("/") }
-                );
-            }
-
             // Swagger Client
             var swaggerClientId = configurationSection["Dashboard_Swagger:ClientId"];
             if (!swaggerClientId.IsNullOrWhiteSpace())

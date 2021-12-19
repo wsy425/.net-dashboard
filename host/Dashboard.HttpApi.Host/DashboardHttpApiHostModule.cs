@@ -26,6 +26,7 @@ using Volo.Abp.Swashbuckle;
 using Volo.Abp.VirtualFileSystem;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.BlobStoring.FileSystem;
+using Volo.Abp.MultiTenancy;
 using Volo.Abp.Threading;
 
 namespace Dashboard
@@ -54,6 +55,11 @@ namespace Dashboard
             Configure<AbpDbContextOptions>(options =>
             {
                 options.UseMySQL();
+            });
+            
+            Configure<AbpMultiTenancyOptions>(option =>
+            {
+                option.IsEnabled = false;
             });
             
             Configure<AbpBlobStoringOptions>(options =>
