@@ -3,6 +3,7 @@ using System.Linq;
 using Dashboard.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -132,11 +133,22 @@ namespace Dashboard
                     options.Authority = configuration["AuthServer:Authority"];
                     options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
                     options.Audience = configuration["AuthServer:ApiName"];
+                    options.TokenValidationParameters.ValidIssuer = "http://192.168.43.61:44340";
                 });
 
             Configure<AbpDistributedCacheOptions>(options =>
             {
                 options.KeyPrefix = "Dashboard:";
+            });
+            
+            Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredUniqueChars = 0;
+                options.Password.RequireNonAlphanumeric = false;
             });
 
             context.Services.AddCors(options =>

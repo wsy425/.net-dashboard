@@ -3,7 +3,7 @@
     "Dashboard": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:44352",
+      "applicationUrl": "http://0.0.0.0:44352",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

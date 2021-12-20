@@ -1,4 +1,5 @@
-﻿using Volo.Abp.Settings;
+﻿using Volo.Abp.Identity.Settings;
+using Volo.Abp.Settings;
 
 namespace Dashboard.Settings
 {

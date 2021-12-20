@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Dashboard.Contracts;
 using Dashboard.Localization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Volo.Abp;
-using Volo.Abp.Account;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.Guids;
 using Volo.Abp.Identity;
 using IdentityUser = Volo.Abp.Identity.IdentityUser;
-using UserLoginInfo = Volo.Abp.Account.Web.Areas.Account.Controllers.Models.UserLoginInfo;
 
 namespace Dashboard.Controllers
 {
@@ -44,6 +38,7 @@ namespace Dashboard.Controllers
             {
                 return new UserResultDto
                 {
+                    StatusCode = 500,
                     Message = L["User:Existed"]
                 };
             }
@@ -55,17 +50,19 @@ namespace Dashboard.Controllers
             {
                 return new UserResultDto
                 {
+                    StatusCode = 500,
                     Message = L["User:CreateFailed",userResult.ToString().Split(":")[1].TrimStart()]
                 };
             }
             await _userManager.AddDefaultRolesAsync(newUser);
             return new UserResultDto
             {
+                StatusCode = 200,
                 Message = L["User:CreateSuccess"]
             };
         }
         
-        [HttpPut("reset-password")]
+        [HttpPost("reset-password")]
         public async Task<UserResultDto> ResetPasswordAsync([FromBody] ForgetPasswordDto input)
         {
             ValidateLoginInfo(input);
@@ -74,6 +71,7 @@ namespace Dashboard.Controllers
             {
                 return new UserResultDto
                 {
+                    StatusCode = 500,
                     Message = L["User:UserNameInvalid", input.Username]
                 };
             }
@@ -82,6 +80,7 @@ namespace Dashboard.Controllers
             {
                 return new UserResultDto
                 {
+                    StatusCode = 500,
                     Message = L["User:UserEmailInvalid", input.UserEmail]
                 };
             }
@@ -90,6 +89,7 @@ namespace Dashboard.Controllers
             {
                 return new UserResultDto
                 {
+                    StatusCode = 500,
                     Message = L["User:UserNameNotMatchEmail", input.Username,input.UserEmail]
                 };
             }
@@ -99,11 +99,13 @@ namespace Dashboard.Controllers
             {
                 return new UserResultDto
                 {
+                    StatusCode = 500,
                     Message = L["User:ResetPasswordFail",resetResult.ToString().Split(":")[1].TrimStart()]
                 };
             }
             return new UserResultDto
             {
+                StatusCode = 200,
                 Message = L["User:ResetPasswordSuccess"]
             };
         }
