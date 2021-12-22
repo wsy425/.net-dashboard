@@ -77,7 +77,7 @@ namespace Dashboard
     {
         public override void PreConfigureServices(ServiceConfigurationContext context)
         {
-            // 部署到Centos服务器上时因为不存在/libs/abp/core/abp.css  /libs/abp/utils/abp-utils.umd.min.js报错
+            // 部署到Centos8服务器上时因为不存在/libs/abp/core/abp.css  /libs/abp/utils/abp-utils.umd.min.js报错
             context.Services.PreConfigure<AbpBundlingOptions>(options =>
             {
                 options.Mode = BundlingMode.None;
@@ -130,10 +130,14 @@ namespace Dashboard
             context.Services.AddAuthentication()
                 .AddJwtBearer(options =>
                 {
+                    // base-address of your identityserver
                     options.Authority = configuration["AuthServer:Authority"];
                     options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
+                    // if you are using API resources, you can specify the name here
                     options.Audience = configuration["AuthServer:ApiName"];
-                    options.TokenValidationParameters.ValidIssuer = "http://192.168.43.61:44340";
+                    options.TokenValidationParameters.ValidIssuer = "http://192.168.43.48:44340";
+                    // IdentityServer emits a typ header by default, recommended extra check
+                    options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
                 });
 
             Configure<AbpDistributedCacheOptions>(options =>
@@ -145,7 +149,7 @@ namespace Dashboard
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 6;
-                options.Password.RequireLowercase = false;
+                options.Password.RequireLowercase = false;  
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredUniqueChars = 0;
                 options.Password.RequireNonAlphanumeric = false;
@@ -222,6 +226,9 @@ namespace Dashboard
                         .GetRequiredService<IDataSeeder>()
                         .SeedAsync();
                 }
+                // await scope.ServiceProvider
+                //     .GetRequiredService<IDataSeeder>()
+                //     .SeedAsync();
             });
         }
     }
