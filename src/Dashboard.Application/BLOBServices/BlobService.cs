@@ -7,6 +7,7 @@ using Dashboard.BLOB;
 using Dashboard.BLOB.Dto;
 using Dashboard.BLOBConstant;
 using Dashboard.BLOBEntity;
+using Dashboard.ServiceExtensions;
 using Microsoft.Extensions.Configuration;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
@@ -94,19 +95,34 @@ namespace Dashboard.BLOBServices
                 IsDeleteOk = isOk
             };
         }
-        /**
-         * 传入name则根据包含name名返回列表
-         * 不传入列表名则默认返回所有文件名
-         */
+        /// <summary>
+        /// 根据name的值返回包含其值的图片名及链接，若name为null则返回所有带png或jgp的图片
+        /// </summary>
+        /// <param name="field">需要图片包含的名称字段</param>
+        /// <returns></returns>
+        public async Task<List<GetBlobsDto>> GetBackGroundListAsync(string field)
+        {
+            var resultList = await _repository.GetListAsync();
+            var resultDto = new List<GetBlobsDto>();
+            var pngOrJgpEntity = resultList.Where(b => 
+                b.Name.RemoveSeparateCode().IsContainPngOrJpgName(field)).ToList();
+            if (pngOrJgpEntity.Count == 0)
+            {
+                return resultDto;
+            }
+
+            return ObjectMapper.Map(pngOrJgpEntity, resultDto);
+        }
+        
         public List<string> GetListAsync(string name)
         {
-            var filePath = _configuration["Blobs:Picture"] + "/host";
+            var filePath = _configuration["Blobs:files"] + "/host";
             var directoryInfo = new DirectoryInfo(filePath);
             var files = directoryInfo.GetFiles();
             if (!string.IsNullOrEmpty(name))
             {
-               return files.Select(file => file.Name)
-                   .Where(file => file.Contains(name)).ToList();
+                return files.Select(file => file.Name)
+                    .Where(file => file.Contains(name)).ToList();
             }
             return files.Select(file => file.Name).ToList();
         }

@@ -1,8 +1,10 @@
 using System;
 using System.Linq;
 using Dashboard.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -128,6 +130,10 @@ namespace Dashboard
             });
 
             context.Services.AddAuthentication()
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+                {
+                    options.Cookie.SameSite = SameSiteMode.Strict;
+                })
                 .AddJwtBearer(options =>
                 {
                     // base-address of your identityserver
@@ -135,7 +141,7 @@ namespace Dashboard
                     options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
                     // if you are using API resources, you can specify the name here
                     options.Audience = configuration["AuthServer:ApiName"];
-                    options.TokenValidationParameters.ValidIssuer = "http://192.168.43.48:44340";
+                    options.TokenValidationParameters.ValidIssuer = "http://192.168.43.61:44340";
                     // IdentityServer emits a typ header by default, recommended extra check
                     options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
                 });
@@ -190,7 +196,7 @@ namespace Dashboard
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
             app.UseCorrelationId();
             app.UseStaticFiles();
             app.UseRouting();
@@ -226,9 +232,6 @@ namespace Dashboard
                         .GetRequiredService<IDataSeeder>()
                         .SeedAsync();
                 }
-                // await scope.ServiceProvider
-                //     .GetRequiredService<IDataSeeder>()
-                //     .SeedAsync();
             });
         }
     }

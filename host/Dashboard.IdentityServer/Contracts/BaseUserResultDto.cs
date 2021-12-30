@@ -1,6 +1,7 @@
-﻿namespace Dashboard.Contracts
+﻿
+namespace Dashboard.Contracts
 {
-    public class UserResultDto
+    public class BaseUserResultDto
     {
         public int StatusCode { get; set; }
         public string Message { get; set; }

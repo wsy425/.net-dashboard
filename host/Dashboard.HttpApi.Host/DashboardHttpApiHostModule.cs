@@ -68,7 +68,7 @@ namespace Dashboard
                 {
                     container.UseFileSystem(fileSystem =>
                     {
-                        fileSystem.BasePath = configuration["Blobs:Picture"];
+                        fileSystem.BasePath = configuration["Blobs:files"];
                         fileSystem.AppendContainerNameToBasePath = false;
                     });
                 });
@@ -152,7 +152,7 @@ namespace Dashboard
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
             app.UseCorrelationId();
             app.UseStaticFiles();
             app.UseRouting();

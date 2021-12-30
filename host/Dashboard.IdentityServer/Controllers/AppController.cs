@@ -31,12 +31,12 @@ namespace Dashboard.Controllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<UserResultDto> UserRegisterAsync([FromBody]UserRegisterDto register)
+        public async Task<UserRegisterResultDto> UserRegisterAsync([FromBody]UserRegisterDto register)
         {
             var nameResult = await _userManager.FindByNameAsync(register.Username);
             if (nameResult != null)
             {
-                return new UserResultDto
+                return new UserRegisterResultDto
                 {
                     StatusCode = 500,
                     Message = L["User:Existed"]
@@ -48,28 +48,31 @@ namespace Dashboard.Controllers
             var userResult = await _userManager.CreateAsync(newUser,register.Password);
             if (!userResult.Succeeded)
             {
-                return new UserResultDto
+                return new UserRegisterResultDto
                 {
                     StatusCode = 500,
                     Message = L["User:CreateFailed",userResult.ToString().Split(":")[1].TrimStart()]
                 };
             }
             await _userManager.AddDefaultRolesAsync(newUser);
-            return new UserResultDto
+            return new UserRegisterResultDto
             {
+                Id = newUser.Id,
+                Username = newUser.UserName,
+                Email = newUser.Email,
                 StatusCode = 200,
                 Message = L["User:CreateSuccess"]
             };
         }
         
         [HttpPost("reset-password")]
-        public async Task<UserResultDto> ResetPasswordAsync([FromBody] ForgetPasswordDto input)
+        public async Task<BaseUserResultDto> ResetPasswordAsync([FromBody] ForgetPasswordDto input)
         {
             ValidateLoginInfo(input);
             var resultByName = await _userManager.FindByNameAsync(input.Username);
             if (resultByName ==null)
             {
-                return new UserResultDto
+                return new BaseUserResultDto
                 {
                     StatusCode = 500,
                     Message = L["User:UserNameInvalid", input.Username]
@@ -78,7 +81,7 @@ namespace Dashboard.Controllers
             var resultByEmail = await _userManager.FindByEmailAsync(input.UserEmail);
             if (resultByEmail ==null)
             {
-                return new UserResultDto
+                return new BaseUserResultDto
                 {
                     StatusCode = 500,
                     Message = L["User:UserEmailInvalid", input.UserEmail]
@@ -87,7 +90,7 @@ namespace Dashboard.Controllers
 
             if (!resultByName.Id.Equals(resultByEmail.Id))
             {
-                return new UserResultDto
+                return new BaseUserResultDto
                 {
                     StatusCode = 500,
                     Message = L["User:UserNameNotMatchEmail", input.Username,input.UserEmail]
@@ -97,13 +100,13 @@ namespace Dashboard.Controllers
             var resetResult = await _userManager.ResetPasswordAsync(resultByEmail, token, input.NewPassword);
             if (!resetResult.Succeeded)
             {
-                return new UserResultDto
+                return new BaseUserResultDto
                 {
                     StatusCode = 500,
                     Message = L["User:ResetPasswordFail",resetResult.ToString().Split(":")[1].TrimStart()]
                 };
             }
-            return new UserResultDto
+            return new BaseUserResultDto
             {
                 StatusCode = 200,
                 Message = L["User:ResetPasswordSuccess"]

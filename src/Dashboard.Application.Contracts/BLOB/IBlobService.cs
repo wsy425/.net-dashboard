@@ -13,6 +13,8 @@ namespace Dashboard.BLOB
 
         Task<BlogDeleteDto> DeleteAsync(string name);
 
+        Task<List<GetBlobsDto>> GetBackGroundListAsync(string name);
+
         List<string> GetListAsync(string name);
     }
 }

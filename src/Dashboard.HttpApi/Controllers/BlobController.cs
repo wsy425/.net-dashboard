@@ -67,6 +67,13 @@ namespace Dashboard.Controllers
         }
 
         [HttpGet]
+        [Route("background")]
+        public async Task<List<GetBlobsDto>> GetBackGroundListAsync(string name)
+        {
+            return await _blobsAppService.GetBackGroundListAsync(name);
+        }
+        
+        [HttpGet]
         public List<string> GetListAsync(string name)
         {
             return _blobsAppService.GetListAsync(name);
