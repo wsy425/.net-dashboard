@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Modularity;
 using Volo.Abp.MongoDB;
 
@@ -7,7 +7,7 @@ namespace Dashboard.MongoDB
     [DependsOn(
         typeof(DashboardDomainModule),
         typeof(AbpMongoDbModule)
-        )]
+    )]
     public class DashboardMongoDbModule : AbpModule
     {
         public override void ConfigureServices(ServiceConfigurationContext context)

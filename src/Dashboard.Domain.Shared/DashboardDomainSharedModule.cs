@@ -1,4 +1,4 @@
-﻿using Volo.Abp.Modularity;
+using Volo.Abp.Modularity;
 using Volo.Abp.Localization;
 using Dashboard.Localization;
 using Volo.Abp.Localization.ExceptionHandling;

@@ -46,19 +46,20 @@ namespace Dashboard.Controllers
             );
         }
 
-        [HttpGet]
-        [Route("download/{name}")]
-        public async Task<FileResult> DownloadAsync(string name)
-        {
-            var file = await _blobsAppService.GetAsync(name);
-            var extension = Path.GetExtension(name).RemovePreFix(".").ToLowerInvariant();
-            var type = GetFileExtensionType(extension);
-            return File(
-                file.Bytes, 
-                type,
-                name.Split("_")[1]
-            );
-        }
+        // [HttpGet]
+        // [Route("download/{name}")]
+        // [ApiExplorerSettings(IgnoreApi = true)]
+        // public async Task<FileResult> DownloadAsync(string name)
+        // {
+        //     var file = await _blobsAppService.GetAsync(name);
+        //     var extension = Path.GetExtension(name).RemovePreFix(".").ToLowerInvariant();
+        //     var type = GetFileExtensionType(extension);
+        //     return File(
+        //         file.Bytes, 
+        //         type,
+        //         name.Split("_")[1]
+        //     );
+        // }
 
         [HttpDelete]
         public async Task<BlogDeleteDto> DeleteAsync(string name)
@@ -72,13 +73,7 @@ namespace Dashboard.Controllers
         {
             return await _blobsAppService.GetBackGroundListAsync(name);
         }
-        
-        [HttpGet]
-        public List<string> GetListAsync(string name)
-        {
-            return _blobsAppService.GetListAsync(name);
-        }
-        
+
         // [HttpGet]
         // [Route("json/{name}")]
         // public async Task<FileResult> GetJsonAsync(string name)

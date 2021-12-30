@@ -22,7 +22,7 @@ namespace Dashboard.BLOBServices
     [RemoteService(false)]
     public class BlobService : ApplicationService, IBlobService
     {
-        private readonly IBlobContainer<ProfilePictureContainer> _blobContainer;
+        private readonly IBlobContainer<ProfileBackgroundContainer> _blobContainer;
         private readonly IRepository<Blob, Guid> _repository;
         private readonly IGuidGenerator _guidGenerator;
         private readonly IConfiguration _configuration;
@@ -30,7 +30,7 @@ namespace Dashboard.BLOBServices
         public BlobService(
             IConfiguration configuration, 
             IGuidGenerator guidGenerator, 
-            IBlobContainer<ProfilePictureContainer> blobContainer, 
+            IBlobContainer<ProfileBackgroundContainer> blobContainer, 
             IRepository<Blob, Guid> repository)
         {
             _configuration = configuration;
@@ -112,19 +112,6 @@ namespace Dashboard.BLOBServices
             }
 
             return ObjectMapper.Map(pngOrJgpEntity, resultDto);
-        }
-        
-        public List<string> GetListAsync(string name)
-        {
-            var filePath = _configuration["Blobs:files"] + "/host";
-            var directoryInfo = new DirectoryInfo(filePath);
-            var files = directoryInfo.GetFiles();
-            if (!string.IsNullOrEmpty(name))
-            {
-                return files.Select(file => file.Name)
-                    .Where(file => file.Contains(name)).ToList();
-            }
-            return files.Select(file => file.Name).ToList();
         }
     }
 }

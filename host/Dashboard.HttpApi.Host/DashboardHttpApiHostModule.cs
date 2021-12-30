@@ -10,7 +10,6 @@ using Microsoft.Extensions.Hosting;
 using Dashboard.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Volo.Abp;
-using Volo.Abp.AspNetCore.Mvc.UI.MultiTenancy;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -24,8 +23,6 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.VirtualFileSystem;
-using Volo.Abp.BlobStoring;
-using Volo.Abp.BlobStoring.FileSystem;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.Threading;
 
@@ -41,9 +38,7 @@ namespace Dashboard
         typeof(AbpPermissionManagementEntityFrameworkCoreModule),
         typeof(AbpSettingManagementEntityFrameworkCoreModule),
         typeof(AbpAspNetCoreSerilogModule),
-        typeof(AbpSwashbuckleModule),
-        typeof(AbpBlobStoringModule),
-        typeof(AbpBlobStoringFileSystemModule)
+        typeof(AbpSwashbuckleModule)
         )]
     public class DashboardHttpApiHostModule : AbpModule
     {
@@ -62,17 +57,6 @@ namespace Dashboard
                 option.IsEnabled = false;
             });
             
-            Configure<AbpBlobStoringOptions>(options =>
-            {
-                options.Containers.ConfigureDefault(container =>
-                {
-                    container.UseFileSystem(fileSystem =>
-                    {
-                        fileSystem.BasePath = configuration["Blobs:files"];
-                        fileSystem.AppendContainerNameToBasePath = false;
-                    });
-                });
-            });
 
             if (hostingEnvironment.IsDevelopment())
             {
