@@ -12,6 +12,8 @@ namespace Dashboard.EntityFrameworkCore
          * public DbSet<Question> Questions { get; set; }
          */
         public DbSet<Blob> Blobs { get; set; }
+        
+        public DbSet<File> Files { get; set; }
 
         public DashboardDbContext(DbContextOptions<DashboardDbContext> options) 
             : base(options)

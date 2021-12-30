@@ -12,5 +12,6 @@ namespace Dashboard.EntityFrameworkCore
          * DbSet<Question> Questions { get; }
          */
         DbSet<Blob> Blobs { get; }
+        DbSet<File> Files { get; }
     }
 }

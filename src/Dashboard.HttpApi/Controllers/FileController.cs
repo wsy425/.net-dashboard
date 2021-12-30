@@ -10,22 +10,22 @@ using Volo.Abp.Http;
 
 namespace Dashboard.Controllers
 {
-    [Route("api/dashboard/blob/background")]
-    public class BlobController : DashboardController
+    [Route("api/dashboard/blob/file")]
+    public class FileController : DashboardController
     {
-        private readonly IBlobService _blobsAppService;
+        private readonly IFileService _service;
 
-        public BlobController(IBlobService blobsAppService)
+        public FileController(IFileService service)
         {
-            _blobsAppService = blobsAppService;
+            _service = service;
         }
-
+        
         [HttpPost]
         public async Task<BlobUploadResultDto> CreateAsync(IFormFile file)
         {
             await using var stream = new MemoryStream();
             await file.CopyToAsync(stream);
-            var result = await _blobsAppService.CreateAsync(new BlobUploadInputDto
+            var result = await _service.CreateAsync(new BlobUploadInputDto
             {
                 Name = file.FileName,
                 Bytes = stream.ToArray()
@@ -33,58 +33,45 @@ namespace Dashboard.Controllers
             
             return result;
         }
-
+        
         [HttpGet]
         [Route("web/{name}")]
         public async Task<FileResult> GetAsync(string name)
         {
-            var file = await _blobsAppService.GetAsync(name);
+            var file = await _service.GetAsync(name);
             var extension = Path.GetExtension(name).RemovePreFix(".").ToLowerInvariant();
             return File(
                 file.Bytes, 
                 MimeTypes.GetByExtension(extension)
             );
         }
-
-        // [HttpGet]
-        // [Route("download/{name}")]
-        // [ApiExplorerSettings(IgnoreApi = true)]
-        // public async Task<FileResult> DownloadAsync(string name)
-        // {
-        //     var file = await _blobsAppService.GetAsync(name);
-        //     var extension = Path.GetExtension(name).RemovePreFix(".").ToLowerInvariant();
-        //     var type = GetFileExtensionType(extension);
-        //     return File(
-        //         file.Bytes, 
-        //         type,
-        //         name.Split("_")[1]
-        //     );
-        // }
-
+        
         [HttpDelete]
         public async Task<BlogDeleteDto> DeleteAsync(string name)
         {
-            return await _blobsAppService.DeleteAsync(name);
+            return await _service.DeleteAsync(name);
         }
 
         [HttpGet]
-        public async Task<List<GetBlobsDto>> GetBackGroundListAsync(string name)
+        public async Task<List<string>> GetListAsync(string name)
         {
-            return await _blobsAppService.GetBackGroundListAsync(name);
+            return await _service.GetListAsync(name);
         }
-
-        // [HttpGet]
-        // [Route("json/{name}")]
-        // public async Task<FileResult> GetJsonAsync(string name)
-        // {
-        //     var file = await _blobsAppService.GetAsync(name);
-        //     return File(
-        //         file.Bytes,
-        //         MimeTypes.Application.Json,
-        //         name.Substring(14)
-        //     );
-        // }
-
+        
+        [HttpGet]
+        [Route("download/{name}")]
+        public async Task<FileResult> DownloadAsync(string name)
+        {
+            var file = await _service.GetAsync(name);
+            var extension = Path.GetExtension(name).RemovePreFix(".").ToLowerInvariant();
+            var type = GetFileExtensionType(extension);
+            return File(
+                file.Bytes, 
+                type,
+                name
+            );
+        }
+        
         /**
          * 获取常用文件后缀
          */

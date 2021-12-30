@@ -1,4 +1,5 @@
 ﻿using System;
+using Dashboard.BLOBConstant;
 using Dashboard.BLOBEntity;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp;
@@ -43,6 +44,12 @@ namespace Dashboard.EntityFrameworkCore
             builder.Entity<Blob>(b =>
             {
                 b.ToTable(options.TablePrefix + "Blob", options.Schema);
+            });
+
+            builder.Entity<File>(f =>
+            {
+                f.ToTable(options.TablePrefix + "File", options.Schema);
+                f.Property(p => p.Size).HasMaxLength(BlobFileConstant.MaxFileSize);
             });
         }
     }

@@ -8,7 +8,6 @@ using Dashboard.BLOB.Dto;
 using Dashboard.BLOBConstant;
 using Dashboard.BLOBEntity;
 using Dashboard.ServiceExtensions;
-using Microsoft.Extensions.Configuration;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.BlobStoring;
@@ -25,15 +24,12 @@ namespace Dashboard.BLOBServices
         private readonly IBlobContainer<ProfileBackgroundContainer> _blobContainer;
         private readonly IRepository<Blob, Guid> _repository;
         private readonly IGuidGenerator _guidGenerator;
-        private readonly IConfiguration _configuration;
 
         public BlobService(
-            IConfiguration configuration, 
             IGuidGenerator guidGenerator, 
             IBlobContainer<ProfileBackgroundContainer> blobContainer, 
             IRepository<Blob, Guid> repository)
         {
-            _configuration = configuration;
             _guidGenerator = guidGenerator;
             _blobContainer = blobContainer;
             _repository = repository;
@@ -57,7 +53,7 @@ namespace Dashboard.BLOBServices
                                  + Path.GetFileNameWithoutExtension(input.Name)
                                  + Path.GetExtension(input.Name);
 
-            var fileUrl = "api/dashboard/blob/files/web/" + uniqueFileName;
+            var fileUrl = "api/dashboard/blob/background/web/" + uniqueFileName;
 
             await _blobContainer.SaveAsync(uniqueFileName,input.Bytes);
 

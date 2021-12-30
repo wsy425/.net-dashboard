@@ -28,7 +28,7 @@ namespace Dashboard
                     container.IsMultiTenant = false;
                     container.UseFileSystem(fileSystem =>
                     {
-                        fileSystem.BasePath = configuration["Blobs:files"];
+                        fileSystem.BasePath = configuration["Blobs:background"];
                         fileSystem.AppendContainerNameToBasePath = false;
                     });
                 });

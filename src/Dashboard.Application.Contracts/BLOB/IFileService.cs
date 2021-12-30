@@ -5,8 +5,8 @@ using Volo.Abp.Application.Services;
 
 namespace Dashboard.BLOB
 {
-    public interface IBlobService : IBlobBaseService
+    public interface IFileService : IBlobBaseService
     {
-        Task<List<GetBlobsDto>> GetBackGroundListAsync(string name);
+        Task<List<string>> GetListAsync(string name);
     }
 }
