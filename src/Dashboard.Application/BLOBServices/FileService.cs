@@ -7,8 +7,8 @@ using Dashboard.BLOB.Dto;
 using Dashboard.BLOBEntity;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
-using Volo.Abp.BlobStoring;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Uow;
 using Volo.Abp.Validation;
 
 namespace Dashboard.BLOBServices
@@ -52,7 +52,7 @@ namespace Dashboard.BLOBServices
         public async Task<BlobFileDto> GetAsync(string name)
         {
             Check.NotNullOrWhiteSpace(name, nameof(name));
-            var res = await _repository.GetAsync(f => f.Name == name);
+            var res = await _repository.FindAsync(f => f.Name == name);
             if (res == null)
             {
                 throw new AbpValidationException("File is not existed!");
@@ -64,6 +64,7 @@ namespace Dashboard.BLOBServices
             };
         }
         
+        [UnitOfWork]
         public async Task<BlogDeleteDto> DeleteAsync(string name)
         {
             Check.NotNullOrWhiteSpace(name, nameof(name));

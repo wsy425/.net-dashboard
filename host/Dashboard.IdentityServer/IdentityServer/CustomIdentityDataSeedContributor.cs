@@ -55,7 +55,11 @@ namespace Dashboard.IdentityServer
                 await ChangeAdminDefaultRoles();
             }
         }
-        
+        /// <summary>
+        /// 设置 管理员 和 普通用户 两个默认角色
+        /// </summary>
+        /// <param name="customRoles">自定义的默认角色名</param>
+        /// <param name="context">种子数据上下文</param>
         private async Task InitialRolesAsync(IEnumerable<string> customRoles,DataSeedContext context)
         {
             foreach (var customRoleName in customRoles)
@@ -78,7 +82,9 @@ namespace Dashboard.IdentityServer
                 }
             }
         }
-        
+        /// <summary>
+        /// 改变admin的默认权限为管理员
+        /// </summary>
         private async Task ChangeAdminDefaultRoles()
         {
             var userResult = await _userRepository.FindByNormalizedUserNameAsync(_normalizer.NormalizeName(AdminName));
