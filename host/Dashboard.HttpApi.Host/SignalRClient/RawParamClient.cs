@@ -1,30 +1,35 @@
 ﻿using System.Threading.Tasks;
 using Dashboard.HubClient;
+using Dashboard.Sensors.S1;
+using Dashboard.Sensors.S1.Dto;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using ILogger = Serilog.ILogger;
+using Newtonsoft.Json;
 
 namespace Dashboard.SignalRClient
 {
-    public abstract class RawParamClient : IRawParamClient
+    public class RawParamClient : IRawParamClient
     {
        private HubConnection Connection { get; set; }
        private readonly IConfiguration _configuration;
-       private readonly ILogger _logger;
+       private readonly ILogger<RawParamClient> _logger;
+       private readonly ISensorOneService _oneService;
 
-       protected RawParamClient(
+       public RawParamClient(
            IConfiguration configuration, 
-           ILogger logger)
+           ILogger<RawParamClient> logger, 
+           ISensorOneService oneService)
        {
            _configuration = configuration;
            _logger = logger;
+           _oneService = oneService;
        }
 
        internal async Task Initial()
        {
            var url = _configuration["SignalR:Url"];
-           _logger.Information("initialize");
+           _logger.LogInformation("initialize");
            Connection = new HubConnectionBuilder()
                .WithUrl(url)
                .WithAutomaticReconnect()
@@ -42,37 +47,30 @@ namespace Dashboard.SignalRClient
        
        private void BindEvents()
        {
-           Connection.On<string>("RawDataCome", SaveDatas);
-           Connection.On<string>("AutoPCA", s => s.Remove(0));
+           Connection.On<string>("RawDataCome", SaveDataS1);
+           Connection.On<string>("AutoPCA", s=>s.Remove(0));
        }
        
-       private async Task SaveDatas(string jsonData)
+       private async Task SaveDataS1(string jsonData)
        {
-           _logger.Information(jsonData);
+           var createS1 = JsonConvert.DeserializeObject<CreateSensorOneDto>(jsonData);
+           await _oneService.CreateAsync(createS1);
        }
-       public async Task SpectrumClientAsync(string SerializeData)
+       public async Task SpectrumClientAsync(string serializeData)
        {
-           await Connection.SendAsync("SpectrumDataDeliver", SerializeData);
+           await Connection.SendAsync("SpectrumDataDeliver", serializeData);
        }
-
-       public async Task PCAClientAsync(string SerializeData)
+       public async Task ProphetClientAsync(string serializeData)
        {
-           await Connection.SendAsync("PCADataDeliver", SerializeData);
+           await Connection.SendAsync("ProphetPredictDeliver", serializeData);
        }
-
-       public async Task ProphetClientAsync(string SerializeData)
+       public async Task GRUClientAsync(string serializeData)
        {
-           await Connection.SendAsync("ProphetPredictDeliver", SerializeData);
+           await Connection.SendAsync("GRUPredictDeliver", serializeData);
        }
-
-       public async Task GRUClientAsync(string SerializeData)
+       public async Task ARIMAClientAsync(string serializeData)
        {
-           await Connection.SendAsync("GRUPredictDeliver", SerializeData);
-       }
-        
-       public async Task ARIMAClientAsync(string SerializeData)
-       {
-           await Connection.SendAsync("ARIMAPredictDeliver", SerializeData);
+           await Connection.SendAsync("ARIMAPredictDeliver", serializeData);
        }
     }
 }

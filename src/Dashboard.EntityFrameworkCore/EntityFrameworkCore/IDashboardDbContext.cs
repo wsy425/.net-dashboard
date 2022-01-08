@@ -5,7 +5,7 @@ using Volo.Abp.EntityFrameworkCore;
 
 namespace Dashboard.EntityFrameworkCore
 {
-    [ConnectionStringName(DashboardDbProperties.ConnectionStringName)]
+    [ConnectionStringName(DashboardDbProperties.MySQLConnectionStringName)]
     public interface IDashboardDbContext : IEfCoreDbContext
     {
         /* Add DbSet for each Aggregate Root here. Example:

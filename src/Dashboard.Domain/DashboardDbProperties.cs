@@ -6,6 +6,8 @@
 
         public static string DbSchema { get; set; } = null;
 
-        public const string ConnectionStringName = "Dashboard";
+        public const string MySQLConnectionStringName = "MySQLDashboard";
+
+        public const string MongoConnectionStringName = "MongoDashboard";
     }
 }
