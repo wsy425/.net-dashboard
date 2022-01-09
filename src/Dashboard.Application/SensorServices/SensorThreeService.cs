@@ -77,9 +77,12 @@ namespace Dashboard.SensorServices
             specList.Add(filterList);
             specList.Add(requestBody.Feature);
             specList.Add(requestBody.Windows);
-            var service = _serviceProvider.GetRequiredService<IRawParamClient>();
             var serializeDataList = JsonConvert.SerializeObject(specList, Formatting.None);
-            await service.SpectrumClientAsync(serializeDataList);
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var service = scope.ServiceProvider.GetRequiredService<IRawParamClient>();
+                await service.SpectrumClientAsync(serializeDataList);
+            }
         }
         // Prophet算法接口
         private async Task ProphetAsync(FormGroup requestBody)
@@ -107,8 +110,11 @@ namespace Dashboard.SensorServices
             prophetList.Add(requestBody.Windows);
             prophetList.Add(requestBody.PredictStep);
             var serializeDataList = JsonConvert.SerializeObject(prophetList, Formatting.None);
-            var service = _serviceProvider.GetRequiredService<IRawParamClient>();
-            await service.ProphetClientAsync(serializeDataList);
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var service = scope.ServiceProvider.GetRequiredService<IRawParamClient>();
+                await service.ProphetClientAsync(serializeDataList);
+            }
         }
         // GRUPredict算法接口
         private async Task GruAsync(FormGroup requestBody)
@@ -135,8 +141,11 @@ namespace Dashboard.SensorServices
                 gruParams.Add(requestAttributes[i].GetValue(requestBody));
             }
             var serializeDataList = JsonConvert.SerializeObject(gruParams, Formatting.None);
-            var service = _serviceProvider.GetRequiredService<IRawParamClient>();
-            await service.GRUClientAsync(serializeDataList);
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var service = scope.ServiceProvider.GetRequiredService<IRawParamClient>();
+                await service.GRUClientAsync(serializeDataList);
+            }
         }
         // ARIMA算法实现接口
         private async Task ArimaAsync(FormGroup requestBody)
@@ -161,8 +170,11 @@ namespace Dashboard.SensorServices
             arimaParams.Add(requestBody.I);
             arimaParams.Add(requestBody.Q);
             var serializeDataList = JsonConvert.SerializeObject(arimaParams, Formatting.None);
-            var service = _serviceProvider.GetRequiredService<IRawParamClient>();
-            await service.ARIMAClientAsync(serializeDataList);
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var service = scope.ServiceProvider.GetRequiredService<IRawParamClient>();
+                await service.ARIMAClientAsync(serializeDataList);
+            }
         }
     }
 }

@@ -34,8 +34,8 @@ namespace Dashboard
                 var services = host.Services.CreateScope().ServiceProvider;
                 try
                 {
-                    // var rawParamClient = services.GetRequiredService<RawParamClient>();
-                    // await rawParamClient.Initial();
+                    var rawParamClient = services.GetRequiredService<RawParamClient>();
+                    await rawParamClient.Initial();
                 }
                 catch(Exception e)
                 {

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Dashboard.EntityFrameworkCore;
+using Dashboard.MongoDB;
 using Microsoft.OpenApi.Models;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
@@ -31,6 +32,7 @@ namespace Dashboard
     [DependsOn(
         typeof(DashboardApplicationModule),
         typeof(DashboardEntityFrameworkCoreModule),
+        typeof(DashboardMongoDbModule),
         typeof(DashboardHttpApiModule),
         typeof(AbpAutofacModule),
         typeof(AbpEntityFrameworkCoreMySQLModule),
@@ -47,17 +49,16 @@ namespace Dashboard
             var hostingEnvironment = context.Services.GetHostingEnvironment();
             var configuration = context.Services.GetConfiguration();
 
-            Configure<AbpDbContextOptions>(options =>
-            {
-                options.UseMySQL();
-            });
-            
             Configure<AbpMultiTenancyOptions>(option =>
             {
                 option.IsEnabled = false;
             });
             
-
+            Configure<AbpDbContextOptions>(options =>
+            {
+                options.UseMySQL();
+            });
+            
             if (hostingEnvironment.IsDevelopment())
             {
                 Configure<AbpVirtualFileSystemOptions>(options =>

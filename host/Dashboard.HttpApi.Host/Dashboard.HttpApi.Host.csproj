@@ -33,6 +33,7 @@
     <ProjectReference Include="..\..\src\Dashboard.HttpApi\Dashboard.HttpApi.csproj" />
     <ProjectReference Include="..\..\src\Dashboard.Application\Dashboard.Application.csproj" />
     <ProjectReference Include="..\..\src\Dashboard.EntityFrameworkCore\Dashboard.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\..\src\Dashboard.MongoDB\Dashboard.MongoDB.csproj" />
   </ItemGroup>
 
   <ItemGroup>

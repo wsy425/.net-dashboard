@@ -24,7 +24,8 @@ namespace Dashboard.Controllers
             return await _oneAppService.GetAsync(id);
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
+        // [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpGet]
         public async Task<PagedResultDto<SensorOneDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
             return await _oneAppService.GetListAsync(input);

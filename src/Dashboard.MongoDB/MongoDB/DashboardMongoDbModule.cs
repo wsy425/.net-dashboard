@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Modularity;
 using Volo.Abp.MongoDB;
+using Volo.Abp.Uow;
 
 namespace Dashboard.MongoDB
 {
@@ -17,6 +18,12 @@ namespace Dashboard.MongoDB
                 /* Add custom repositories here. Example:
                  * options.AddRepository<Question, MongoQuestionRepository>();
                  */
+                options.AddDefaultRepositories<DashboardMongoDbContext>(true);
+            });
+            
+            Configure<AbpUnitOfWorkDefaultOptions>(options =>
+            {
+                options.TransactionBehavior = UnitOfWorkTransactionBehavior.Disabled;
             });
         }
     }
