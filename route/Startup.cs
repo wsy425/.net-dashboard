@@ -27,7 +27,7 @@ namespace route
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddSignalR();
+            ConfigureSignalR(services);
             services.AddCors(options =>
             {
                 options.AddPolicy(AllowOrigins,builder =>
@@ -44,6 +44,14 @@ namespace route
                         .AllowAnyMethod()
                         .AllowCredentials();
                 });
+            });
+        }
+        
+        private void ConfigureSignalR(IServiceCollection services)
+        {
+            services.AddSignalR().AddHubOptions<RawParamHub>(options =>
+            {
+                options.MaximumReceiveMessageSize = 10240000;
             });
         }
 
@@ -72,7 +80,11 @@ namespace route
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
-                endpoints.MapHub<RawParamHub>("/RawParam");
+                endpoints.MapHub<RawParamHub>("/RawParam", options =>
+                {
+                    options.TransportMaxBufferSize = 10240000;
+                    options.ApplicationMaxBufferSize = 10240000;
+                });
             });
         }
     }

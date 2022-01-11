@@ -31,7 +31,8 @@ namespace Dashboard.Controllers
             return await _oneAppService.GetListAsync(input);
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpPost]
+        // [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<SensorOneDto> CreateAsync(CreateSensorOneDto input)
         {
             return await _oneAppService.CreateAsync(input);

@@ -2,7 +2,7 @@
 
 let connection = new signalR.HubConnectionBuilder().withUrl("/RawParam").build();
 
-connection.on("RawDataCome", function (message) {
+connection.on("RawDataComeS1", function (message) {
     let li = document.createElement("li");
     document.getElementById("messagesList").appendChild(li);
     // We can assign user-supplied strings to an element's textContent because it

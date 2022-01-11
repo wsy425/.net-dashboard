@@ -1,0 +1,20 @@
+{
+  "Name": "S1发数器",
+  "Time": "Time",
+  "Parameters": [
+    {
+      "Name": "TPL101",
+      "index": 0
+    },
+    {
+      "Name": "TPL102",
+      "index": 1
+    },
+    {
+      "Name": "TPL103",
+      "index": 2
+    }
+  ],
+  "host": "0.0.0.0",
+  "port": 8888
+}

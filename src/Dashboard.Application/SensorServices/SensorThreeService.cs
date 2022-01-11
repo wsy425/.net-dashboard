@@ -93,19 +93,19 @@ namespace Dashboard.SensorServices
                     && param.Id.CompareTo(requestBody.EndTime) <= 0)
                 .ToList();
             var list = new ArrayList();
-            var time_list = new List<string>();
+            var timeList = new List<string>();
             for (var i = 0; i < dataList.Count; i += requestBody.Interval)
             {
                 if (requestBody.Parameter == null)
                 {
                     throw new AbpValidationException("参数不能为空！");
                 }
-                time_list.Add(dataList[i].Id);
+                timeList.Add(dataList[i].Id);
                 list.Add(dataList[i].GetType().GetProperty(requestBody.Parameter)?.GetValue(dataList[i]));
             }
             var prophetList = new ArrayList();
             prophetList.Add(list);
-            prophetList.Add(time_list);
+            prophetList.Add(timeList);
             prophetList.Add(requestBody.Feature);
             prophetList.Add(requestBody.Windows);
             prophetList.Add(requestBody.PredictStep);
@@ -124,16 +124,16 @@ namespace Dashboard.SensorServices
                     param.Id.CompareTo(requestBody.StartTime) >= 0 && param.Id.CompareTo(requestBody.EndTime) <= 0)
                 .ToList();
             var list = new ArrayList();
-            var time_list = new List<string>();
+            var timeList = new List<string>();
             var requestAttributes = requestBody.GetType().GetProperties();
             for (var i = 0; i < dataList.Count; i += requestBody.Interval)
             {
-                time_list.Add(dataList[i].Id);
+                timeList.Add(dataList[i].Id);
                 list.Add(dataList[i].GetType().GetProperty(requestBody.Parameter)?.GetValue(dataList[i]));
             }
             var gruParams = new ArrayList();
             gruParams.Add(list);
-            gruParams.Add(time_list);
+            gruParams.Add(timeList);
             for (var i = 5; i < requestAttributes.Length; i++)
             {
                 if(requestAttributes[i].Name == nameof(requestBody.PredictStep))
@@ -155,15 +155,15 @@ namespace Dashboard.SensorServices
                     param.Id.CompareTo(requestBody.StartTime) >= 0 && param.Id.CompareTo(requestBody.EndTime) <= 0)
                 .ToList();
             var list = new ArrayList();
-            var time_list = new List<string>();
+            var timeList = new List<string>();
             for (var i = 0; i < dataList.Count; i += requestBody.Interval)
             {
-                time_list.Add(dataList[i].Id);
+                timeList.Add(dataList[i].Id);
                 list.Add(dataList[i].GetType().GetProperty(requestBody.Parameter)?.GetValue(dataList[i]));
             }
             var arimaParams = new ArrayList();
             arimaParams.Add(list);
-            arimaParams.Add(time_list);
+            arimaParams.Add(timeList);
             arimaParams.Add(requestBody.Feature);
             arimaParams.Add(requestBody.Windows);
             arimaParams.Add(requestBody.P);

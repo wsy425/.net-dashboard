@@ -2,6 +2,10 @@
 using Dashboard.HubClient;
 using Dashboard.Sensors.S1;
 using Dashboard.Sensors.S1.Dto;
+using Dashboard.Sensors.S2;
+using Dashboard.Sensors.S2.Dto;
+using Dashboard.Sensors.S3;
+using Dashboard.Sensors.S3.Dto;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -15,15 +19,21 @@ namespace Dashboard.SignalRClient
        private readonly IConfiguration _configuration;
        private readonly ILogger<RawParamClient> _logger;
        private readonly ISensorOneService _oneService;
+       private readonly ISensorTwoService _twoService;
+       private readonly ISensorThreeService _threeService;
 
        public RawParamClient(
            IConfiguration configuration, 
            ILogger<RawParamClient> logger, 
-           ISensorOneService oneService)
+           ISensorOneService oneService, 
+           ISensorThreeService threeService, 
+           ISensorTwoService twoService)
        {
            _configuration = configuration;
            _logger = logger;
            _oneService = oneService;
+           _threeService = threeService;
+           _twoService = twoService;
        }
 
        internal async Task Initial()
@@ -47,14 +57,29 @@ namespace Dashboard.SignalRClient
        
        private void BindEvents()
        {
-           Connection.On<string>("RawDataCome", SaveDataS1);
-           Connection.On<string>("AutoPCA", s=>s.Remove(0));
+           Connection.On<string>("RawDataComeS1", SaveDataS1);
+           Connection.On<string>("RawDataComeS2", SaveDataS2);
+           Connection.On<string>("RawDataComeS3", SaveDataS3);
+           Connection.On<string>("AutoPCAS1", s=>s.Remove(0));
+           Connection.On<string>("AutoPCAS2", s=>s.Remove(0));
+           Connection.On<string>("AutoPCAS3", s=>s.Remove(0));
+           Connection.On<string>("Front", s=>s.Remove(0));
        }
        
        private async Task SaveDataS1(string jsonData)
        {
            var createS1 = JsonConvert.DeserializeObject<CreateSensorOneDto>(jsonData);
            await _oneService.CreateAsync(createS1);
+       }
+       private async Task SaveDataS2(string jsonData)
+       {
+           var createS1 = JsonConvert.DeserializeObject<CreateSensorTwoDto>(jsonData);
+           await _twoService.CreateAsync(createS1);
+       }
+       private async Task SaveDataS3(string jsonData)
+       {
+           var createS1 = JsonConvert.DeserializeObject<CreateSensorThreeDto>(jsonData);
+           await _threeService.CreateAsync(createS1);
        }
        public async Task SpectrumClientAsync(string serializeData)
        {

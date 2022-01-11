@@ -35,7 +35,7 @@ namespace Dashboard
                 .ForMember(des => des.Id,
                     opt => 
                         opt.MapFrom(src => 
-                            src.Time.Replace("-","").Replace(":","").Replace(" ","").Substring(0,17)));
+                            src.Time.Replace("-","").Replace(":","").Replace(" ","").Substring(0,14)));
         }
 
         private void SensorTwo()
@@ -45,7 +45,7 @@ namespace Dashboard
                 .ForMember(des => des.Id,
                     opt => 
                         opt.MapFrom(src => 
-                            src.Time.Replace("-","").Replace(":","").Replace(" ","").Substring(0,17)));
+                            src.Time.Replace("-","").Replace(":","").Replace(" ","").Substring(0,14)));
         }
 
         private void SensorThree()
@@ -55,7 +55,7 @@ namespace Dashboard
                 .ForMember(des => des.Id,
                     opt => 
                         opt.MapFrom(src => 
-                            src.Time.Replace("-","").Replace(":","").Replace(" ","").Substring(0,17)));
+                            src.Time.Replace("-","").Replace(":","").Replace(" ","").Substring(0,14)));
         }
     }
 }
