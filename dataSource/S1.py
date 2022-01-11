@@ -8,6 +8,36 @@ import time
 import datetime
 import json
 import urllib3
+import PCA_Monitor as PCA
+
+
+class Job(threading.Thread):
+    def __init__(self, *args, **kwargs):
+        super(Job, self).__init__(*args, **kwargs)
+        self.__flag = threading.Event()  # 用于暂停线程标识符
+        self.__flag.set()    # 设置为True
+        self.__running = threading.Event()   # 用于停止线程标识
+        self.__running.set()  # 将running设置为True
+
+    def run(self):
+        while self.__running.is_set():
+            self.__flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
+            S1["Time"] = (datetime.datetime.now() +
+                          datetime.timedelta(hours=config["add_hours"])).strftime("%Y-%m-%d %H:%M:%S")
+            all_dict = json.dumps(S1)
+            hub_connection.send("DeliverRawDataS1", [all_dict])
+            time.sleep(config["timeSleep"])
+
+    def pause(self):
+        self.__flag.clear()  # 设置为False, 让线程阻塞
+
+    def resume(self):
+        self.__flag.set()  # 设置为True, 让线程停止阻塞
+
+    def stop(self):
+        self.__flag.set()  # 将线程从暂停状态恢复, 如何已经暂停的话
+        self.__running.clear()
+
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -20,7 +50,7 @@ def start():
     try:
         if symbol == 1:
             # connect()
-            future = threadPool.submit(connect)
+            a.resume()
             info = {"result": SensorsConfig["Name"]}
     except Exception as e:
         logger.warning("SignalR data sender client has closed")
@@ -34,10 +64,7 @@ def stop():
     symbol = int(request.form['symbol'])
     info = {"result": "Fail"}
     if symbol == 0:
-        hub_connection.stop()
-        ss = threading.currentThread()
-        time.sleep(config["reconnect_interval"])
-        hub_connection.start()
+        a.pause()
         info = {"result": "Success"}
     return jsonify(info), 200
 
@@ -72,4 +99,20 @@ if __name__ == '__main__':
     hub_connection.on_open(lambda: logger.warning("SignalR data sender client has started"))
     hub_connection.on_close(lambda: logger.warning("SignalR data sender client is closing"))
     hub_connection.start()
+    # 等待SignalR启动
+    time.sleep(1)
+    a = Job()
+    a.start()
+    a.pause()
     app.run(debug=False, host=SensorsConfig["host"], port=SensorsConfig["port"])
+
+    # a = Job()
+    # a.start()
+    # time.sleep(3)
+    # a.pause()
+    # time.sleep(3)
+    # a.resume()
+    # time.sleep(3)
+    # a.pause()
+    # time.sleep(2)
+    # a.stop()
