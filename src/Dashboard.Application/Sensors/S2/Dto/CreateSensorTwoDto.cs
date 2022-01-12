@@ -6,5 +6,6 @@
         public double TPL201 { get; set; }
         public double TPL202 { get; set; }
         public double TPL203 { get; set; }
+        public double TPL204 { get; set; }
     }
 }

@@ -1,0 +1,6 @@
+{
+  "host": "192.168.18.12",
+  "port": 8888,
+  "add_hours": 8,
+  "timeSleep": 1
+}

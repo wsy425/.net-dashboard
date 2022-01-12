@@ -2,7 +2,5 @@
   "URL": "https://localhost:5001/RawParam",
   "keep_alive_interval": 5,
   "reconnect_interval": 1,
-  "max_attempts": 5,
-  "add_hours": 8,
-  "timeSleep": 1
+  "max_attempts": 5
 }

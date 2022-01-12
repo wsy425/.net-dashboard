@@ -6,5 +6,6 @@
         public double TPL101 { get; set; }
         public double TPL102 { get; set; }
         public double TPL103 { get; set; }
+        public double TPL104 { get; set; }
     }
 }

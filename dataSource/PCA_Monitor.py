@@ -18,7 +18,7 @@ class PCA_Monitor:
         self.Model = clf
 
     def SaveModel(self, path, name):
-        if self.Model != None:
+        # if self.Model != None:
             fullpath = path + "/" + name + ".joblib"
             dump(self.Model, fullpath)
 

@@ -7,6 +7,7 @@ namespace Dashboard.SensorsEntity
         public double TPL301 { get; set; }
         public double TPL302 { get; set; }
         public double TPL303 { get; set; }
+        public double TPL304 { get; set; }
 
         protected S3()
         {
