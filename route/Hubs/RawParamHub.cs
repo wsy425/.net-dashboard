@@ -17,19 +17,16 @@ namespace route.Hubs
         [HubMethodName(nameof(DeliverRawDataS1))]
         public async Task DeliverRawDataS1(string data)
         {
-            _logger.LogInformation(data);
             await Clients.Others.SendAsync("RawDataComeS1", data);
         }
         [HubMethodName(nameof(DeliverRawDataS2))]
         public async Task DeliverRawDataS2(string data)
         {
-            _logger.LogError(data);
             await Clients.Others.SendAsync("RawDataComeS2", data);
         }
         [HubMethodName(nameof(DeliverRawDataS3))]
         public async Task DeliverRawDataS3(string data)
         {
-            _logger.LogWarning(data);
             await Clients.Others.SendAsync("RawDataComeS3", data);
         }
         # endregion
@@ -38,7 +35,6 @@ namespace route.Hubs
         [HubMethodName(nameof(AutoPCADeliverS1))]
         public Task AutoPCADeliverS1(string serializeData)
         {
-            _logger.LogInformation(serializeData);
             return Clients.Others.SendAsync("AutoPCAS1", serializeData);
         }
         [HubMethodName(nameof(AutoPCADeliverS2))]

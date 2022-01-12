@@ -240,18 +240,24 @@ if __name__ == '__main__':
 
     hub_connection = HubConnectionBuilder() \
         .with_url(SignalRConfig['URL'], options={
-        "verify_ssl": False
-    }) \
+            "verify_ssl": False
+        }) \
         .configure_logging(logging.INFO) \
         .with_automatic_reconnect({
-        "type": "raw",
-        "keep_alive_interval": SignalRConfig["keep_alive_interval"],
-        "reconnect_interval": SignalRConfig["reconnect_interval"],
-        "max_attempts": SignalRConfig["max_attempts"]
-    }).build()
+            "type": "raw",
+            "keep_alive_interval": SignalRConfig["keep_alive_interval"],
+            "reconnect_interval": SignalRConfig["reconnect_interval"],
+            "max_attempts": SignalRConfig["max_attempts"]
+        }).build()
     hub_connection.on_open(lambda: logger.warning("SignalR data sender client has started"))
     hub_connection.on_close(lambda: logger.warning("SignalR data sender client is closing"))
     hub_connection.start()
+
+    hub_connection.on('Front', str)
+    hub_connection.on('Spectrum', str)
+    hub_connection.on('ProphetPredict', str)
+    hub_connection.on('GRUPredict', str)
+    hub_connection.on('ARIMAPredict', str)
 
     # 等待SignalR启动
     time.sleep(1)

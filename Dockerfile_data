@@ -1,0 +1,8 @@
+FROM python:3.7.9
+COPY ./dataSource /dataSender/
+
+WORKDIR /dataSender
+
+RUN pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --no-cache-dir -r requirements.txt
+
+CMD ["python", "dataSender.py"]

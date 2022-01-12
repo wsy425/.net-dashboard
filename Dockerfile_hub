@@ -1,0 +1,19 @@
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /app
+EXPOSE 80
+
+# copy csproj and restore as distinct layers
+COPY ./route/*.csproj route/
+WORKDIR /app/route
+RUN dotnet restore
+
+# copy everything else and build app
+COPY common.props /app/
+COPY route/ /app/route/
+WORKDIR /app/route
+RUN dotnet publish -c Release -o /out
+
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
+WORKDIR /app
+COPY --from=build /out .
+ENTRYPOINT ["dotnet", "route.dll"]
