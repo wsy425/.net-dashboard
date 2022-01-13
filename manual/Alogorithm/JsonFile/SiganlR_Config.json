@@ -1,0 +1,6 @@
+{
+  "SignalR_URL": "http://localhost:45001/RawParam",
+  "keep_alive_interval": 2,
+  "reconnect_interval": 2,
+  "max_attempts": 5
+}

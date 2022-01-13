@@ -36,7 +36,6 @@ namespace Dashboard.ManualService
         public async Task<ManualResponse> GetManualResultAsync(ManualRequest request)
         {
             var result = new ManualResponse();
-            var ss = RequestCheck.ManualRequestCheckError(request);
             if (RequestCheck.ManualRequestCheckError(request))
             {
                 return new ManualResponse
