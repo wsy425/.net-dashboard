@@ -162,6 +162,15 @@ namespace Dashboard
         
         public override void OnPostApplicationInitialization(ApplicationInitializationContext context)
         {
+            var configuration = context.GetConfiguration();
+            var paths = new List<string>()
+            {
+                configuration["Blobs:background"],
+                configuration["Blobs:files"],
+                configuration["ManualResult:path"]
+            };
+            CheckPathsExisted(paths);
+            
             AsyncHelper.RunSync(async () =>
             {
                 using var scope = context.ServiceProvider.CreateScope();
@@ -170,6 +179,22 @@ namespace Dashboard
                     .Database
                     .EnsureCreatedAsync();
             });
+        }
+
+        private static void CheckPathsExisted(IEnumerable<string> paths)
+        {
+            foreach (var path in paths)
+            {
+                CheckPathExisted(path);
+            }
+        }
+        
+        private static void CheckPathExisted(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
         }
     }
 }

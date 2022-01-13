@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Dashboard.Manual;
+using Dashboard.ManualShared;
 
 namespace Dashboard.Parameters
 {
@@ -8,6 +8,6 @@ namespace Dashboard.Parameters
         [Required]
         public Status State { get; set; }
         [Required]
-        public string Name { get; set; }
+        public Algorithm Name { get; set; }
     }
 }

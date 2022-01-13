@@ -1,4 +1,4 @@
-﻿namespace Dashboard.Manual
+﻿namespace Dashboard.ManualShared
 {
     public enum Algorithm
     {

@@ -9,5 +9,6 @@ namespace Dashboard.HubClient
         Task ProphetClientAsync(string SerializeData);
         Task GRUClientAsync(string SerializeData);
         Task ARIMAClientAsync(string SerializeData);
+        Task FrontClientAsync(string serializeData);
     }
 }

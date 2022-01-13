@@ -97,5 +97,9 @@ namespace Dashboard.SignalRClient
        {
            await Connection.SendAsync("ARIMAPredictDeliver", serializeData);
        }
+       public async Task FrontClientAsync(string serializeData)
+       {
+           await Connection.SendAsync("FrontDeliver", serializeData);
+       }
     }
 }

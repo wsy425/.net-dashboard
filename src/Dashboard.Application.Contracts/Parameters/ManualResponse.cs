@@ -6,6 +6,6 @@ namespace Dashboard.Parameters
     {
         public int Code { get; set; }
         public string Info { get; set; }
-        public Object Data { get; set; }
+        public string Data { get; set; }
     }
 }
