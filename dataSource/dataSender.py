@@ -25,8 +25,9 @@ class JobS1(threading.Thread):
             self.__flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
             S1["Time"] = (datetime.datetime.now() +
                           datetime.timedelta(hours=globalConfig["add_hours"])).strftime("%Y-%m-%d %H:%M:%S")
+            controlS1 = fileRead.read_config_file("JsonFile/scope.json")["S1"]
             for index in range(len(S1Config['Parameters'])):
-                S1[S1Config['Parameters'][index]['Name']] = np.random.random() * 0.1 + 0.5
+                S1[S1Config['Parameters'][index]['Name']] = np.random.random() * controlS1["multiple"] + controlS1["offset"]
             all_dict = json.dumps(S1)
             hub_connection.send("DeliverRawDataS1", [all_dict])
             array = converter(S1)
@@ -63,8 +64,9 @@ class JobS2(threading.Thread):
             self.__flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
             S2["Time"] = (datetime.datetime.now() +
                           datetime.timedelta(hours=globalConfig["add_hours"])).strftime("%Y-%m-%d %H:%M:%S")
+            controlS2 = fileRead.read_config_file("JsonFile/scope.json")["S2"]
             for index in range(len(S2Config['Parameters'])):
-                S2[S2Config['Parameters'][index]['Name']] = np.random.random() * 0.1 + 0.2
+                S2[S2Config['Parameters'][index]['Name']] = np.random.random() * controlS2["multiple"] + controlS2["offset"]
             all_dict = json.dumps(S2)
             hub_connection.send("DeliverRawDataS2", [all_dict])
             array = converter(S2)
@@ -101,8 +103,9 @@ class JobS3(threading.Thread):
             self.__flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
             S3["Time"] = (datetime.datetime.now() +
                           datetime.timedelta(hours=globalConfig["add_hours"])).strftime("%Y-%m-%d %H:%M:%S")
+            controlS3 = fileRead.read_config_file("JsonFile/scope.json")["S3"]
             for index in range(len(S3Config['Parameters'])):
-                S3[S3Config['Parameters'][index]['Name']] = np.random.random() * 0.1 + 0.8
+                S3[S3Config['Parameters'][index]['Name']] = np.random.random() * controlS3["multiple"] + controlS3["offset"]
             all_dict = json.dumps(S3)
             hub_connection.send("DeliverRawDataS3", [all_dict])
             array = converter(S3)
@@ -156,7 +159,7 @@ def start():
         else:
             info = {"code": 400, "result": "发数器启动失败"}
     except Exception as e:
-        info = {"code": 400, "result": "请求失败"}
+        info = {"code": 500, "result": "请求失败"}
     rst = jsonify(info)
     rst.headers['Access-Control-Allow-Origin'] = '*'
     rst.headers['Access-Control-Allow-Method'] = 'POST'
@@ -171,25 +174,25 @@ def stop():
         if symbol == 1:
             if a.status():
                 a.pause()
-                info = {"code": 200, "info": "S1发数器暂停成功"}
+                info = {"code": 200, "result": "S1发数器暂停成功"}
             else:
-                info = {"code": 400, "info": "S1发数器已暂停"}
+                info = {"code": 400, "result": "S1发数器已暂停"}
         elif symbol == 2:
             if b.status():
                 b.pause()
-                info = {"code": 200, "info": "S2发数器暂停成功"}
+                info = {"code": 200, "result": "S2发数器暂停成功"}
             else:
-                info = {"code": 400, "info": "S2发数器已暂停"}
+                info = {"code": 400, "result": "S2发数器已暂停"}
         elif symbol == 3:
             if c.status():
                 c.pause()
-                info = {"code": 200, "info": "S3发数器暂停成功"}
+                info = {"code": 200, "result": "S3发数器暂停成功"}
             else:
-                info = {"code": 400, "info": "S3发数器已暂停"}
+                info = {"code": 400, "result": "S3发数器已暂停"}
         else:
             info = {"code": 400, "result": "发数器停止失败"}
     except Exception as e:
-        info = {"code": 400, "result": "请求失败"}
+        info = {"code": 500, "result": "请求失败"}
     rst = jsonify(info)
     rst.headers['Access-Control-Allow-Origin'] = '*'
     rst.headers['Access-Control-Allow-Method'] = 'POST'
@@ -212,6 +215,7 @@ if __name__ == '__main__':
     PCAS1Config = fileRead.read_config_file("JsonFile/PCAS1.json")
     PCAS2Config = fileRead.read_config_file("JsonFile/PCAS2.json")
     PCAS3Config = fileRead.read_config_file("JsonFile/PCAS3.json")
+    controlConfig = fileRead.read_config_file("JsonFile/scope.json")
 
     p1 = PCA.PCA_Monitor()
     p2 = PCA.PCA_Monitor()

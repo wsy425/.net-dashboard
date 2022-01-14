@@ -41,13 +41,11 @@ def ARI(datas):
         timeArr = np.array(timelist, dtype=str)
         result = [state, timeArr.tolist(), arr.tolist(), fc_series.values.tolist(),
                   lower_series.values.tolist(), upper_series.values.tolist()]
-        strlist = json.dumps(result)
-        create(filePath, strlist)
+        data = json.dumps(result)
+        create(filePath, data)
         request = {
-            "request": {
-                "state": 0,
-                "name": 3
-            }
+            "state": 0,
+            "name": 103
         }
         logger.warning("Arima算法回调成功")
         result.clear()
@@ -57,10 +55,8 @@ def ARI(datas):
         logger.error("Arima算法调用异常")
         logger.error(ex)
         request = {
-            "request": {
-                "state": 1,
-                "name": 3
-            }
+            "state": 1,
+            "name": 103
         }
     requests.post(url=url, headers=header, json=request)
     return
@@ -97,13 +93,11 @@ def GRU(datas):
         timelist = timelist[-(len(pre) + len(train)):]
         timeArr = np.array(timelist, dtype=str)
         result = [state, timeArr.tolist(), train, pre.tolist()]
-        strlist = json.dumps(result)
-        create(filePath, strlist)
+        data = json.dumps(result)
+        create(filePath, data)
         request = {
-            "request": {
-                "state": 0,
-                "name": 2
-            }
+            "state": 0,
+            "name": 102
         }
         logger.warning("GRU算法回调成功")
         timelist.clear()
@@ -112,10 +106,8 @@ def GRU(datas):
         logger.error("GRU算法调用异常")
         logger.error(ex)
         request = {
-            "request": {
-                "state": 1,
-                "name": 2
-            }
+            "state": 1,
+            "name": 102
         }
     requests.post(url=url, headers=header, json=request)
     return
@@ -157,13 +149,11 @@ def Pro(datas):
         logger.warning("Prophet算法预测结束")
         state = True
         result = [state, timelist, yhat.tolist(), y_low.tolist(), y_up.tolist(), arr.tolist()]
-        strlist = json.dumps(result)
-        create(filePath, strlist)
+        data = json.dumps(result)
+        create(filePath, data)
         request = {
-            "request": {
-                "state": 0,
-                "name": 1
-            }
+            "state": 0,
+            "name": 101
         }
         logger.warning("Prophet算法回调成功")
         timelist.clear()
@@ -172,10 +162,8 @@ def Pro(datas):
         logger.error("Prophet算法调用异常")
         logger.error(ex)
         request = {
-            "request": {
-                "state": 1,
-                "name": 1
-            }
+            "state": 1,
+            "name": 101
         }
     requests.post(url=url, headers=header, json=request)
     return
@@ -207,13 +195,11 @@ def Spec(datas):
                 break
         result = [state, f[:totalCount].tolist(), Ps[:totalCount].tolist(),
                   Ams[:totalCount].tolist(), Phase[:totalCount].tolist()]
-        strlist = json.dumps(result)
-        create(filePath, strlist)
+        data = json.dumps(result)
+        create(filePath, data)
         request = {
-            "request": {
-                "state": 0,
-                "name": 0
-            }
+            "state": 0,
+            "name": 100
         }
         logger.warning("Spectrum算法调用成功")
         data_list.clear()
@@ -222,10 +208,8 @@ def Spec(datas):
         logger.error("Spectrum算法调用异常")
         logger.error(ex)
         request = {
-            "request": {
-                "state": 1,
-                "name": 0
-            }
+            "state": 1,
+            "name": 100
         }
     requests.post(url=url, headers=header, json=request)
     return

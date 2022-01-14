@@ -2,9 +2,9 @@
 {
     public enum Algorithm
     {
-        Spectrum,
-        Prophet,
-        Gru,
-        Arima
+        Spectrum = 100,
+        Prophet = 101,
+        Gru = 102,
+        Arima = 103
     }
 }
