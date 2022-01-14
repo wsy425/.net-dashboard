@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import ArimaTool as arima
 import GruTool as gru
-# import ProphetTool as pro
+import ProphetTool as pro
 import FeatureExtract as fe
 from datetime import datetime
 import json
@@ -15,6 +15,8 @@ import requests
 
 
 def ARI(datas):
+    txtName = "arima.txt"
+    filePath = directoryPath + "\\" + txtName
     try:
         Stripdata = str(datas).strip('[').strip(']').strip("'")
         DeserializationData = json.loads(Stripdata)
@@ -40,23 +42,33 @@ def ARI(datas):
         result = [state, timeArr.tolist(), arr.tolist(), fc_series.values.tolist(),
                   lower_series.values.tolist(), upper_series.values.tolist()]
         strlist = json.dumps(result)
-        hub_connection.send("FrontDeliver", [strlist])
+        create(filePath, strlist)
+        request = {
+            "request": {
+                "state": 0,
+                "name": 3
+            }
+        }
         logger.warning("Arima算法回调成功")
         result.clear()
         timelist.clear()
+        result.clear()
     except Exception as ex:
         logger.error("Arima算法调用异常")
         logger.error(ex)
-        state = False
-        error_msg = "Arima算法调用异常，请检查诊断参数设置"
-        result = [state, error_msg]
-        strlist = json.dumps(result)
-        hub_connection.send("FrontDeliver", [strlist])
-    result.clear()
+        request = {
+            "request": {
+                "state": 1,
+                "name": 3
+            }
+        }
+    requests.post(url=url, headers=header, json=request)
     return
 
 
 def GRU(datas):
+    txtName = "gru.txt"
+    filePath = directoryPath + "\\" + txtName
     try:
         Stripdata = str(datas).strip('[').strip(']').strip("'")
         DeserializationData = json.loads(Stripdata)
@@ -86,22 +98,32 @@ def GRU(datas):
         timeArr = np.array(timelist, dtype=str)
         result = [state, timeArr.tolist(), train, pre.tolist()]
         strlist = json.dumps(result)
-        hub_connection.send("FrontDeliver", [strlist])
+        create(filePath, strlist)
+        request = {
+            "request": {
+                "state": 0,
+                "name": 2
+            }
+        }
         logger.warning("GRU算法回调成功")
         timelist.clear()
+        result.clear()
     except Exception as ex:
         logger.error("GRU算法调用异常")
         logger.error(ex)
-        state = False
-        error_msg = "GRU算法调用异常，请修改对应参数设置"
-        result = [state, error_msg]
-        strlist = json.dumps(result)
-        hub_connection.send("FrontDeliver", [strlist])
-    result.clear()
+        request = {
+            "request": {
+                "state": 1,
+                "name": 2
+            }
+        }
+    requests.post(url=url, headers=header, json=request)
     return
 
 
 def Pro(datas):
+    txtName = "prophet.txt"
+    filePath = directoryPath + "\\" + txtName
     try:
         Stripdata = str(datas).strip('[').strip(']').strip("'")
         DeserializationData = json.loads(Stripdata)
@@ -123,35 +145,45 @@ def Pro(datas):
         N = len(arr)
         t1 = t[:N]
         df = pd.DataFrame({'ds': t1, 'y': arr})
-        # da = pro.ProphetPredict(df, 'H', period)
-        # # 这里时间戳要换成真实的时间戳t_new
-        # for i in range(0, len(timelist)):
-        #     timelist[i] = str(datetime.strptime(timelist[i], '%Y%m%d%H%M%S'))
-        # for i in range(1, len(t_new)):
-        #     timelist.append(str(t_new[i]))
-        # yhat = da.yhat.values
-        # y_low = da.yhat_lower.values
-        # y_up = da.yhat_upper.values
-        # logger.warning("Prophet算法预测结束")
-        # state = True
-        # result = [state, timelist, yhat.tolist(), y_low.tolist(), y_up.tolist(), arr.tolist()]
-        # strlist = json.dumps(result)
-        # hub_connection.send("FrontDeliver", [strlist])
-        # logger.warning("Prophet算法回调成功")
+        da = pro.ProphetPredict(df, 'H', period)
+        # 这里时间戳要换成真实的时间戳t_new
+        for i in range(0, len(timelist)):
+            timelist[i] = str(datetime.strptime(timelist[i], '%Y%m%d%H%M%S'))
+        for i in range(1, len(t_new)):
+            timelist.append(str(t_new[i]))
+        yhat = da.yhat.values
+        y_low = da.yhat_lower.values
+        y_up = da.yhat_upper.values
+        logger.warning("Prophet算法预测结束")
+        state = True
+        result = [state, timelist, yhat.tolist(), y_low.tolist(), y_up.tolist(), arr.tolist()]
+        strlist = json.dumps(result)
+        create(filePath, strlist)
+        request = {
+            "request": {
+                "state": 0,
+                "name": 1
+            }
+        }
+        logger.warning("Prophet算法回调成功")
         timelist.clear()
+        result.clear()
     except Exception as ex:
         logger.error("Prophet算法调用异常")
         logger.error(ex)
-        state = False
-        error_msg = "Prophet算法调用异常，请检查诊断参数设置"
-        result = [state, error_msg]
-        strlist = json.dumps(result)
-        hub_connection.send("FrontDeliver", [strlist])
-    result.clear()
+        request = {
+            "request": {
+                "state": 1,
+                "name": 1
+            }
+        }
+    requests.post(url=url, headers=header, json=request)
     return
 
 
 def Spec(datas):
+    txtName = "spectrum.txt"
+    filePath = directoryPath + "\\" + txtName
     try:
         Stripdata = str(datas).strip('[').strip(']').strip("'")
         DeserializationData = json.loads(Stripdata)
@@ -174,21 +206,45 @@ def Spec(datas):
                 totalCount = index
                 break
         result = [state, f[:totalCount].tolist(), Ps[:totalCount].tolist(),
-                Ams[:totalCount].tolist(), Phase[:totalCount].tolist()]
+                  Ams[:totalCount].tolist(), Phase[:totalCount].tolist()]
         strlist = json.dumps(result)
-        hub_connection.send("FrontDeliver", [strlist])
-        logger.warning("Spectrum算法回调成功")
+        create(filePath, strlist)
+        request = {
+            "request": {
+                "state": 0,
+                "name": 0
+            }
+        }
+        logger.warning("Spectrum算法调用成功")
         data_list.clear()
+        result.clear()
     except Exception as ex:
         logger.error("Spectrum算法调用异常")
         logger.error(ex)
-        state = False
-        error_msg = "Spectrum算法调用异常，请检查诊断参数设置"
-        result = [state, error_msg]
-        strlist = json.dumps(result)
-        hub_connection.send("FrontDeliver", [strlist])
-    result.clear()
+        request = {
+            "request": {
+                "state": 1,
+                "name": 0
+            }
+        }
+    requests.post(url=url, headers=header, json=request)
     return
+
+
+def mkdir(path):
+    # 去除首位空格 尾部\符号
+    path = path.strip().rstrip("\\")
+    isExists = os.path.exists(path)
+    # 判断结果
+    if not isExists:
+        # 如果不存在则创建目录
+        # 创建目录操作函数
+        os.makedirs(path)
+
+
+def create(full_path, msg):
+    with open(full_path, "w") as file:
+        file.write(msg)
 
 
 if __name__ == "__main__":
@@ -196,6 +252,15 @@ if __name__ == "__main__":
     logger = logging.getLogger("manual")
     arimaConfig = fr.read_config_file("./JsonFile/ArimaConfig.json")
     specConfig = fr.read_config_file("./JsonFile/SpectrumConfig.json")
+    fileConfig = fr.read_config_file("./JsonFile/File.json")
+
+    directoryPath = fileConfig["path"]
+    url = fileConfig['url']
+    mkdir(directoryPath)
+    header = {
+        "Content-Type": "application/json"
+    }
+
     warnings.filterwarnings("ignore")
 
     hub_connection = signalr.ini()
@@ -211,6 +276,6 @@ if __name__ == "__main__":
     hub_connection.on("RawDataComeS2", str)
     hub_connection.on("RawDataComeS3", str)
 
-    temp = "1"
+    temp = 1
     while True:
-        temp = "1"
+        temp = 1

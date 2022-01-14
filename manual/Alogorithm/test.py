@@ -5,20 +5,16 @@ import os
 import numpy as np
 
 
-def mkdir(path):
+def mkdir(directory):
     # 去除首位空格 尾部\符号
-    path = path.strip().rstrip("\\")
-    isExists = os.path.exists(path)
+    directory = directory.strip().rstrip("\\")
+    isExists = os.path.exists(directory)
 
     # 判断结果
     if not isExists:
         # 如果不存在则创建目录
         # 创建目录操作函数
-        os.makedirs(path)
-        print(path + ' 创建成功')
-    else:
-        # 如果目录存在则不创建，并提示目录已存在
-        print(path + ' 目录已存在')
+        os.makedirs(directory)
 
 
 def create(full_path, msg):
@@ -42,12 +38,11 @@ header = {"Content-Type": "application/json"}
 d = {
     "request": {
         "state": 0,
-        "name": 0
+        "name": 1.5
     }
 }
 data = json.dumps(d)
 r = requests.post(url=url, headers=header, data=data)
 print(r.text)
-print(r.content)
 print(r)
 

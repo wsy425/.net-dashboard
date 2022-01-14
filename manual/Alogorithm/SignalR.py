@@ -5,7 +5,7 @@
 # @Software : PyCharm
 
 
-import FileOperate
+import FileOperate as FileRead
 import logging
 from signalrcore.hub_connection_builder import HubConnectionBuilder
 
