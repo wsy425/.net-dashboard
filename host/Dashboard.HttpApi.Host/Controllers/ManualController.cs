@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dashboard.Controllers
 {
-    [Route("manual/result")]
+    [Route("api/manual/result")]
     public class ManualController : DashboardController,IManualService
     {
         private readonly IManualService _service;

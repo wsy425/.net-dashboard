@@ -2,10 +2,8 @@
 
 namespace Dashboard.Parameters
 {
-    public class ManualResponse
+    public class ManualResponse : FileBaseDto
     {
-        public int Code { get; set; }
-        public string Info { get; set; }
         public string Data { get; set; }
     }
 }

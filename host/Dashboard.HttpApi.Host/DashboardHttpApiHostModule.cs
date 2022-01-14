@@ -167,7 +167,8 @@ namespace Dashboard
             {
                 configuration["Blobs:background"],
                 configuration["Blobs:files"],
-                configuration["ManualResult:path"]
+                configuration["ManualResult:path"],
+                configuration["Blobs:errors"]
             };
             CheckPathsExisted(paths);
             
