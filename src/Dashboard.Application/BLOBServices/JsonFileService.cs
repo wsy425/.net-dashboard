@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Dashboard.BLOB;
 using Dashboard.BLOB.Dto;
 using Dashboard.Parameters;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
 
@@ -15,17 +18,22 @@ namespace Dashboard.BLOBServices
     public class JsonFileService : ApplicationService,IJsonFileService
     {
         private readonly IConfiguration _configuration;
+        private readonly ILogger<JsonFileService> _logger;
         private static int _count = 1;
         private static int _sub = 1;
 
-        public JsonFileService(IConfiguration configuration)
+        public JsonFileService(
+            IConfiguration configuration, 
+            ILogger<JsonFileService> logger)
         {
             _configuration = configuration;
+            _logger = logger;
         }
 
         public async Task<FileBaseDto> CreateAsync(List<string> data)
         {
-            var file = EnsureDirectory();
+            var directory = _configuration["Blobs:errors"];
+            var file = EnsureDirectory(directory);
             file = file + "/error_" + _sub + ".txt";
             if (!File.Exists(file))
             {
@@ -64,9 +72,38 @@ namespace Dashboard.BLOBServices
             return res;
         }
 
+        public FileBaseDto CreateAndUpdateAsync(Config config)
+        {
+            try
+            {
+                JsonConvert.DeserializeObject<Dictionary<string,Object>>(config.Content);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new FileBaseDto
+                {
+                    Code = 400,
+                    Info = "传入参数有误，请检查参数格式"
+                };
+            }
+            var directory = _configuration["Blobs:files"] + "\\" + "configs";
+            EnsureDirectory(directory);
+            var filePath = directory + "\\" + config.ConfigName.ToLowerInvariant() + ".txt";
+            using var file = File.CreateText(filePath);
+            var serializer = new JsonSerializer();
+            serializer.Serialize(file, config.Content);
+            return new FileBaseDto
+            {
+                Code = 200,
+                Info = "配置文件更新成功"
+            };
+        }
+
         public BlobUploadInputDto DownLoadAsync()
         {
-            var file = EnsureDirectory();
+            var directory = _configuration["Blobs:errors"];
+            var file = EnsureDirectory(directory);
             file = file + "/error_" + _sub + ".txt";
             byte[] fileArray;
             try
@@ -85,10 +122,23 @@ namespace Dashboard.BLOBServices
                 Name = _sub + ".txt"
             };
         }
-        
-        private string EnsureDirectory()
+
+        public string GetConfigAsync(string name)
         {
-            var directory = _configuration["Blobs:errors"];
+            var directory = _configuration["Blobs:files"] + "\\" + "configs";
+            EnsureDirectory(directory);
+            var file = new DirectoryInfo(directory).GetFiles().FirstOrDefault(file => file.Name.Contains(name));
+            if (file != null)
+            {
+                var content = JsonConvert.DeserializeObject<string>(File.ReadAllText(file.FullName));
+                return content;
+            }
+
+            return null;
+        }
+
+        private string EnsureDirectory(string directory)
+        {
             if (directory.EndsWith("/"))
             {
                 directory.RemovePostFix("/");

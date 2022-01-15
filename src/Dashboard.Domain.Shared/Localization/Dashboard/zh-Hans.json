@@ -10,6 +10,9 @@
     "User:UserEmailInvalid": "{0}所属用户不存在",
     "User:UserNameNotMatchEmail": "{0}和{1}不匹配",
     "User:ResetPasswordSuccess": "重置密码成功",
-    "User:ResetPasswordFail": "重置密码失败,原因是{0}"
+    "User:ResetPasswordFail": "重置密码失败,原因是{0}",
+    "Permission:Dashboard": "TPL可视化仿真小组",
+    "Permission:Dashboard.Base": "基本权限",
+    "Permission:Dashboard.Base.Use": "仪表盘使用"
   }
 }

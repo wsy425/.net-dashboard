@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dashboard.BLOB.Dto;
 using Dashboard.Parameters;
@@ -10,6 +11,10 @@ namespace Dashboard.BLOB
     {
         Task<FileBaseDto> CreateAsync(List<string> data);
 
+        FileBaseDto CreateAndUpdateAsync(Config config);
+
         BlobUploadInputDto DownLoadAsync();
+
+        string GetConfigAsync(string name);
     }
 }

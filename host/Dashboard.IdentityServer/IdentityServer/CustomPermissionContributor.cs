@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Dashboard.Permissions;
 using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
@@ -19,6 +20,7 @@ namespace Dashboard.IdentityServer
 
         private const string ProviderName = RolePermissionValueProvider.ProviderName;
         private const string ProviderKey = "管理员";
+        private const string GeneralUser = "普通用户";
 
         public CustomPermissionContributor(
             ICurrentTenant currentTenant,
@@ -42,6 +44,8 @@ namespace Dashboard.IdentityServer
                 .Where(p => !p.Providers.Any() || p.Providers.Contains(ProviderName))
                 .Select(p => p.Name)
                 .ToArray();
+            var basePermissionNames = permissionNames
+                .Where(p => p.Contains(DashboardPermissions.GroupName));
 
             using (_currentTenant.Change(context?.TenantId))
             {
@@ -62,6 +66,24 @@ namespace Dashboard.IdentityServer
                         )
                     );
                 }
+            }
+            
+            foreach (var permissionName in basePermissionNames)
+            {
+                if (await _permissionGrantRepository.FindAsync(permissionName, ProviderName, GeneralUser) != null)
+                {
+                    continue;
+                }
+
+                await _permissionGrantRepository.InsertAsync(
+                    new PermissionGrant(
+                        _guidGenerator.Create(),
+                        permissionName,
+                        ProviderName,
+                        GeneralUser,
+                        context?.TenantId
+                    )
+                );
             }
         }
     }

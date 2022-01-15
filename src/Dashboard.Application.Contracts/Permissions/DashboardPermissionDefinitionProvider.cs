@@ -8,7 +8,19 @@ namespace Dashboard.Permissions
     {
         public override void Define(IPermissionDefinitionContext context)
         {
-            var myGroup = context.AddGroup(DashboardPermissions.GroupName, L("Permission:Dashboard"));
+            var myGroup = context.AddGroup(
+                DashboardPermissions.GroupName, 
+                L("Permission:Dashboard")
+                );
+            var permissionBase = myGroup.AddPermission(
+                DashboardPermissions.BasePermission.BasePrefix,
+                L("Permission:Dashboard.Base")
+            );
+            
+            permissionBase.AddChild(
+                DashboardPermissions.BasePermission.Use,
+                L("Permission:Dashboard.Base.Use")
+            );
         }
 
         private static LocalizableString L(string name)

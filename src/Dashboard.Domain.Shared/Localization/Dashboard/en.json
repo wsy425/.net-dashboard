@@ -10,6 +10,9 @@
     "User:UserEmailInvalid": "The user to which the {0} belongs does not exist",
     "User:UserNameNotMatchEmail": "{0} and {1} do not match",
     "User:ResetPasswordSuccess": "Password reset successfully",
-    "User:ResetPasswordFail": "Password reset failed, the reasons are {0}"
+    "User:ResetPasswordFail": "Password reset failed, the reasons are {0}",
+    "Permission:Dashboard": "Dashboard",
+    "Permission:Dashboard.Base": "Base Permission",
+    "Permission:Dashboard.Base.Use": "All users use"
   }
 }
