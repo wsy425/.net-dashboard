@@ -48,7 +48,7 @@ namespace Dashboard.ManualService
             if (request.State == Status.Success)
             {
                 var method = Enum.GetName(typeof(Algorithm), request.Name)?.ToLowerInvariant();
-                var filePath = _configuration["ManualResult:path"] + "\\" + method + ".txt";
+                var filePath = _configuration["ManualResult:path"] + method + ".txt";
                 // 根据文件名去获取数据  需要读写文件
                 var data = ReadResultFile(filePath);
                 result.Code = 200;

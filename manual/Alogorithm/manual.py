@@ -16,7 +16,7 @@ import requests
 
 def ARI(datas):
     txtName = "arima.txt"
-    filePath = directoryPath + "\\" + txtName
+    filePath = directoryPath + "/" + txtName
     try:
         Stripdata = str(datas).strip('[').strip(']').strip("'")
         DeserializationData = json.loads(Stripdata)
@@ -64,7 +64,7 @@ def ARI(datas):
 
 def GRU(datas):
     txtName = "gru.txt"
-    filePath = directoryPath + "\\" + txtName
+    filePath = directoryPath + "/" + txtName
     try:
         Stripdata = str(datas).strip('[').strip(']').strip("'")
         DeserializationData = json.loads(Stripdata)
@@ -115,7 +115,7 @@ def GRU(datas):
 
 def Pro(datas):
     txtName = "prophet.txt"
-    filePath = directoryPath + "\\" + txtName
+    filePath = directoryPath + "/" + txtName
     try:
         Stripdata = str(datas).strip('[').strip(']').strip("'")
         DeserializationData = json.loads(Stripdata)
@@ -171,7 +171,7 @@ def Pro(datas):
 
 def Spec(datas):
     txtName = "spectrum.txt"
-    filePath = directoryPath + "\\" + txtName
+    filePath = directoryPath + "/" + txtName
     try:
         Stripdata = str(datas).strip('[').strip(']').strip("'")
         DeserializationData = json.loads(Stripdata)
@@ -216,13 +216,9 @@ def Spec(datas):
 
 
 def mkdir(path):
-    # 去除首位空格 尾部\符号
-    path = path.strip().rstrip("\\")
     isExists = os.path.exists(path)
     # 判断结果
     if not isExists:
-        # 如果不存在则创建目录
-        # 创建目录操作函数
         os.makedirs(path)
 
 
@@ -235,12 +231,16 @@ if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     logger = logging.getLogger("manual")
     arimaConfig = fr.read_config_file("./JsonFile/ArimaConfig.json")
+    logger.warning("The arima configuration file has been load.")
     specConfig = fr.read_config_file("./JsonFile/SpectrumConfig.json")
+    logger.warning("The spectrum configuration file has been load.")
     fileConfig = fr.read_config_file("./JsonFile/File.json")
+    logger.warning("The other configuration files has been load.")
 
-    directoryPath = fileConfig["path"]
+    directoryPath = fileConfig["path"].strip().rstrip("/")
     url = fileConfig['url']
     mkdir(directoryPath)
+    logger.warning("The directory of manual result files has been created.")
     header = {
         "Content-Type": "application/json"
     }

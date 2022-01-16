@@ -1,3 +1,4 @@
+using System;
 using Dashboard.BLOBConstant;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Application;
@@ -28,7 +29,7 @@ namespace Dashboard
                     container.IsMultiTenant = false;
                     container.UseFileSystem(fileSystem =>
                     {
-                        fileSystem.BasePath = configuration["Blobs:background"];
+                        fileSystem.BasePath = configuration["Blobs:background"].RemovePostFix("/");
                         fileSystem.AppendContainerNameToBasePath = false;
                     });
                 });

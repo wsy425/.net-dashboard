@@ -141,7 +141,7 @@ namespace Dashboard
                     options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
                     // if you are using API resources, you can specify the name here
                     options.Audience = configuration["AuthServer:ApiName"];
-                    options.TokenValidationParameters.ValidIssuer = "http://192.168.43.61:44340";
+                    options.TokenValidationParameters.ValidIssuer = configuration["AuthServer:ValidIssuer"];
                     // IdentityServer emits a typ header by default, recommended extra check
                     options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
                 });

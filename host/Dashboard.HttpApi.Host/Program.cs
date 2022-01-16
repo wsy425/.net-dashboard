@@ -29,7 +29,6 @@ namespace Dashboard
             try
             {
                 Log.Information("Starting web host.");
-                // CreateHostBuilder(args).Build().Run();
                 var host = CreateHostBuilder(args).Build();
                 var services = host.Services.CreateScope().ServiceProvider;
                 try

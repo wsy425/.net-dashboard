@@ -87,9 +87,9 @@ namespace Dashboard.BLOBServices
                     Info = "传入参数有误，请检查参数格式"
                 };
             }
-            var directory = _configuration["Blobs:files"] + "\\" + "configs";
-            EnsureDirectory(directory);
-            var filePath = directory + "\\" + config.ConfigName.ToLowerInvariant() + ".txt";
+            var directory = _configuration["Blobs:files"] + "configs";
+            directory = EnsureDirectory(directory);
+            var filePath = directory + "/" + config.ConfigName.ToLowerInvariant() + ".txt";
             using var file = File.CreateText(filePath);
             var serializer = new JsonSerializer();
             serializer.Serialize(file, config.Content);
@@ -125,7 +125,7 @@ namespace Dashboard.BLOBServices
 
         public string GetConfigAsync(string name)
         {
-            var directory = _configuration["Blobs:files"] + "\\" + "configs";
+            var directory = _configuration["Blobs:files"] + "configs";
             EnsureDirectory(directory);
             var file = new DirectoryInfo(directory).GetFiles().FirstOrDefault(file => file.Name.Contains(name));
             if (file != null)
