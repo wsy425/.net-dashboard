@@ -20,9 +20,7 @@ namespace Dashboard
 #endif
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .Enrich.FromLogContext()
-#if DEBUG
                 .WriteTo.Async(c => c.Console())
-#endif
                 .CreateLogger();
 
             try

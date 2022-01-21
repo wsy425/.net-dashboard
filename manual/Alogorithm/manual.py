@@ -12,6 +12,7 @@ import warnings
 import FileOperate as fr
 import logging
 import requests
+warnings.filterwarnings('ignore')
 
 
 def ARI(datas):
@@ -228,6 +229,7 @@ def create(full_path, msg):
 
 
 if __name__ == "__main__":
+    warnings.filterwarnings('ignore')
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     logger = logging.getLogger("manual")
     arimaConfig = fr.read_config_file("./JsonFile/ArimaConfig.json")

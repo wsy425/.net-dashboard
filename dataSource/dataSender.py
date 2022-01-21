@@ -207,7 +207,7 @@ def converter(dict_data):
 
 if __name__ == '__main__':
     urllib3.disable_warnings()
-    SignalRConfig = fileRead.read_config_file("JsonFile/SignalR_Config.json")
+    SignalRConfig = fileRead.read_config_file("JsonFile/SignalR.json")
     S1Config = fileRead.read_config_file("JsonFile/S1.json")
     S2Config = fileRead.read_config_file("JsonFile/S2.json")
     S3Config = fileRead.read_config_file("JsonFile/S3.json")
