@@ -1,0 +1,23 @@
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /app
+EXPOSE 80
+
+# copy csproj and restore as distinct layers
+COPY ./host/Dashboard.IdentityServer/*.csproj host/Dashboard.IdentityServer/
+COPY ./src/Dashboard.Application.Contracts/*.csproj src/Dashboard.Application.Contracts/
+COPY ./src/Dashboard.Domain.Shared/*.csproj src/Dashboard.Domain.Shared/
+WORKDIR /app/host/Dashboard.IdentityServer
+RUN dotnet restore
+
+# copy everything else and build app
+COPY common.props /app/
+COPY ./host/Dashboard.IdentityServer/ /app/host/Dashboard.IdentityServer/
+COPY ./src/Dashboard.Application.Contracts/ /app/src/Dashboard.Application.Contracts/
+COPY ./src/Dashboard.Domain.Shared/ /app/src/Dashboard.Domain.Shared/
+WORKDIR /app/host/Dashboard.IdentityServer
+RUN dotnet publish -c Release -o /out
+
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
+WORKDIR /app
+COPY --from=build /out .
+ENTRYPOINT ["dotnet", "Dashboard.IdentityServer.dll"]

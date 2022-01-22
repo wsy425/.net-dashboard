@@ -1,0 +1,33 @@
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /app
+EXPOSE 80
+
+# copy csproj and restore as distinct layers
+COPY ./host/Dashboard.HttpApi.Host/*.csproj host/Dashboard.HttpApi.Host/
+COPY ./src/Dashboard.Application/*.csproj src/Dashboard.Application/
+COPY ./src/Dashboard.Application.Contracts/*.csproj src/Dashboard.Application.Contracts/
+COPY ./src/Dashboard.Domain/*.csproj src/Dashboard.Domain/
+COPY ./src/Dashboard.Domain.Shared/*.csproj src/Dashboard.Domain.Shared/
+COPY ./src/Dashboard.EntityFrameworkCore/*.csproj src/Dashboard.EntityFrameworkCore/
+COPY ./src/Dashboard.HttpApi/*.csproj src/Dashboard.HttpApi/
+COPY ./src/Dashboard.MongoDB/*.csproj src/Dashboard.MongoDB/
+WORKDIR /app/host/Dashboard.HttpApi.Host
+RUN dotnet restore
+
+# copy everything else and build app
+COPY common.props /app/
+COPY ./host/Dashboard.HttpApi.Host/ /app/host/Dashboard.HttpApi.Host/
+COPY ./src/Dashboard.Application/ /app/src/Dashboard.Application/
+COPY ./src/Dashboard.Application.Contracts/ /app/src/Dashboard.Application.Contracts/
+COPY ./src/Dashboard.Domain/ /app/src/Dashboard.Domain/
+COPY ./src/Dashboard.Domain.Shared/ /app/src/Dashboard.Domain.Shared/
+COPY ./src/Dashboard.EntityFrameworkCore/ /app/src/Dashboard.EntityFrameworkCore/
+COPY ./src/Dashboard.HttpApi/ /app/src/Dashboard.HttpApi/
+COPY ./src/Dashboard.MongoDB/ /app/src/Dashboard.MongoDB/
+WORKDIR /app/host/Dashboard.HttpApi.Host
+RUN dotnet publish -c Release -o /out
+
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
+WORKDIR /app
+COPY --from=build /out .
+ENTRYPOINT ["dotnet", "Dashboard.HttpApi.Host.dll"]
